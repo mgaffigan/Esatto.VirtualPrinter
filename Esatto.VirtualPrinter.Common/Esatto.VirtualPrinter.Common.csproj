@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B15063B4-0D99-496B-81BE-92CD2E47CA4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Esatto.VirtualPrinter</RootNamespace>
+    <AssemblyName>Esatto.VirtualPrinter.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Externs\Com\ClassFactory.cs">
+      <Link>Win32\Com\ClassFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\ClassObjectRegistration.cs">
+      <Link>Win32\Com\ClassObjectRegistration.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\CLSCTX.cs">
+      <Link>Win32\Com\CLSCTX.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\ComInterop.cs">
+      <Link>Win32\Com\ComInterop.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\IClassFactory.cs">
+      <Link>Win32\Com\IClassFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\NativeMethods.cs">
+      <Link>Win32\Com\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\REGCLS.cs">
+      <Link>Win32\Com\REGCLS.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Com\StaClassFactory.cs">
+      <Link>Win32\Com\StaClassFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Printing\JOB_INFO_2.cs">
+      <Link>Win32\Printing\JOB_INFO_2.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Printing\NativeMethods.cs">
+      <Link>Win32\Printing\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Printing\PortMonitor.cs">
+      <Link>Win32\Printing\PortMonitor.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Printing\PortMonitors.cs">
+      <Link>Win32\Printing\PortMonitors.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Printing\SafePrinterHandle.cs">
+      <Link>Win32\Printing\SafePrinterHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Processes\NativeMethods.cs">
+      <Link>Win32\Processes\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Processes\Privilege.cs">
+      <Link>Win32\Processes\Privilege.cs</Link>
+    </Compile>
+    <Compile Include="..\Externs\Processes\ProcessInterop.cs">
+      <Link>Win32\Processes\ProcessInterop.cs</Link>
+    </Compile>
+    <Compile Include="Contract.cs" />
+    <Compile Include="DriverConstants.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Client\PrintTargetRegistration.cs" />
+    <Compile Include="Client\SessionPrintDispatcher.cs" />
+    <Compile Include="Client\VirtualPrinterConfiguration.cs" />
+    <Compile Include="Client\VirtualPrinterConfigurationAccessLevel.cs" />
+    <Compile Include="Client\VirtualPrinterConfigurationCollection.cs" />
+    <Compile Include="Client\VirtualPrinterSystemConfiguration.cs" />
+    <Compile Include="IPC\IpcConstants.cs" />
+    <Compile Include="IPC\IPrintDispatcher.cs" />
+    <Compile Include="IPC\IPrintRedirector.cs" />
+    <Compile Include="IPC\IPrintTarget.cs" />
+    <Compile Include="IPC\PrintJob.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\assets\EsattoCSCommon.targets" />
+  
+  <!-- We include a number of files from other projects.  Copy them to Externs so they can be included in git. -->
+  <Target Name="BeforeBuild" DependsOnTargets="UpdateExterns" />
+  <PropertyGroup>
+    <ExternsSourceDir>C:\dev\tfsroot\Esatto\Branches\Hammer\Source\Esatto.Win32.CommonControls\</ExternsSourceDir>
+    <ExternsDir>$(MSBuildThisFileDir)..\Externs\</ExternsDir>
+  </PropertyGroup>
+  <Target Name="CalculateExterns">
+    <ItemGroup>
+      <IncludedExtern Include="$(ExternsSourceDir)**\*.cs" />
+    </ItemGroup>
+  </Target>
+  <Target Name="UpdateExterns" DependsOnTargets="CalculateExterns" Condition="Exists('$(ExternsSourceDir)')" Inputs="@(IncludedExtern)" Outputs="@(IncludedExtern -> '$(ExternsDir)%(RecursiveDir)%(Filename)%(Extension)')">
+    <ItemGroup>
+      <OldExternToDelete Include="$(ExternsDir)**\*.cs" />
+    </ItemGroup>
+    <Delete Files="@(OldExternToDelete)" />
+    <Copy SourceFiles="@(IncludedExtern)" DestinationFiles="$(ExternsDir)%(RecursiveDir)%(Filename)%(Extension)" />
+  </Target>
+  
+  <!-- Export a TLB with each build -->
+  <Target Name="EsattoCheckEnvironment" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <TargetFrameworkSDKToolsDirectory Condition="'$(TargetFrameworkSDKToolsDirectory)' == ''">C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\</TargetFrameworkSDKToolsDirectory>
+      <TlbExp64Path>$(TargetFrameworkSDKToolsDirectory)x64\tlbexp.exe</TlbExp64Path>
+      <TargetTlbPath>$(TargetDir)$(TargetName).tlb</TargetTlbPath>
+    </PropertyGroup>
+    <Error Text="Could not find tlbexp at '$(TlbExp64Path)'" Condition="!Exists('$(TlbExp64Path)')" />
+  </Target>
+  <Target Name="ExportEsattoTlbs" AfterTargets="AfterBuild"
+          Inputs="$(TargetPath)" Outputs="$(TargetTlbPath)">
+    <Exec Command="&quot;$(TlbExp64Path)&quot; &quot;$(TargetPath)&quot; &quot;/out:$(TargetTlbPath)&quot;" />
+    <ItemGroup>
+      <FileWrites Include="$(TargetTlbPath)" />
+    </ItemGroup>
+  </Target>
+</Project>

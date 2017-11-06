@@ -1,0 +1,35 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssetDir>$(MSBuildThisFileDirectory)</AssetDir>
+  </PropertyGroup>
+  
+  <!-- Versions -->
+  <ItemGroup>
+    <Compile Include="$(AssetDir)SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  
+  <!-- setup assembly signing -->
+  <ItemGroup>
+    <None Include="$(AssetDir)esattoDefault.snk">
+      <Link>esattoDefault.snk</Link>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>$(AssetDir)esattoDefault.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <!-- Logo -->
+  <ItemGroup>
+    <Resource Include="$(AssetDir)Esatto Logo %28ICO, Green, 256x256%29.ico">
+      <Link>Esatto Logo %28ICO, Green, 256x256%29.ico</Link>
+    </Resource>
+  </ItemGroup>
+  <PropertyGroup>
+    <ApplicationIcon>$(EsattoIcon)</ApplicationIcon>
+  </PropertyGroup>
+</Project>

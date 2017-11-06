@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:difx="http://schemas.microsoft.com/wix/DifxAppExtension">
+  <Product Id="*" Name="Esatto Virtual Printer" Language="1033" Version="3.0.0.0" Manufacturer="In Touch Technologies" UpgradeCode="{CA1708EC-9A00-409B-A1A4-236BBE0D94D7}">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <MajorUpgrade AllowDowngrades="yes" />
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="REINSTALLMODE" Value="ocmus" />
+    <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR" />
+    <Icon Id="EsattoIcon.exe" SourceFile="..\Assets\Esatto Logo (ICO, Green, 256x256).ico" />
+    <Property Id="ARPPRODUCTICON" Value="EsattoIcon.exe" />
+    <Feature Id="ProductFeature" Title="All Features" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ProductDriverComponents" />
+      <ComponentGroupRef Id="SystemComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="System64Folder" />
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="CompanyFolder" Name="Esatto">
+          <Directory Id="INSTALLFOLDER" Name="Esatto Virtual Printer">
+            <Directory Id="DriverRef" Name="Drivers" />
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- Shared -->
+      <!-- Esatto.VirtualPrinter.Common.dll is installed to the GAC via Heat -->
+      <ComponentGroupRef Id="EsattoVirtualPrinterCommon_ComReg" />
+      <ComponentGroupRef Id="EsattoVirtualPrinterCommon_TlbReg" />
+      <Component Id="EsattoVirtualPrinter_esVirtualPrinter_evtsrc">
+        <RegistryValue Key="SOFTWARE\In Touch Technologies\Esatto\Components" Name="EsattoVirtualPrinter_esVirtualPrinter_evtsrc" Value="1" Type="integer" Root="HKLM" KeyPath="yes" />
+        <util:EventSource Log="Esatto-App" Name="esVirtualPrinter" EventMessageFile="[NETFRAMEWORK40FULLINSTALLROOTDIR]EventLogMessages.dll" />
+      </Component>
+
+      <!-- Coordinator -->
+      <!-- Esatto.VirtualPrinter.Dispatcher.exe is installed via Heat -->
+      <ComponentGroupRef Id="EsattoVirtualPrinterDispatcher_ComReg" />
+      <Component Id="Esatto.VirtualPrinter.Dispatcher.config">
+        <File Source="$(var.Esatto.VirtualPrinter.Dispatcher.TargetPath).config" KeyPath="yes" />
+      </Component>
+
+      <!-- Redirector -->
+      <!-- Esatto.VirtualPrinter.Redirector.exe is installed via Heat -->
+      <ComponentGroupRef Id="EsattoVirtualPrinterRedirector_ComReg" />
+      <Component Id="Esatto.VirtualPrinter.Redirector.config">
+        <File Source="$(var.Esatto.VirtualPrinter.Redirector.TargetPath).config" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ProductDriverComponents" Directory="DriverRef">
+      <!-- Port Monitor -->
+      <Component Id="Esatto.VirtualPrinter.PortMonitor.dll">
+        <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetPath)" KeyPath="yes" />
+      </Component>
+      
+      <!-- Printer driver -->
+      <Component Id="Esatto.VirtualPrinter.Driver.inf">
+        <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2.inf" KeyPath="yes" />
+        <difx:Driver PlugAndPlayPrompt="no" ForceInstall="no" AddRemovePrograms="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.Driver.cat">
+        <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2.cat" KeyPath="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.Driver.gpd">
+        <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2.gpd" KeyPath="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.Driver.xml">
+        <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2-PipelineConfig.xml" KeyPath="yes" />
+      </Component>
+    
+      <!-- Installers -->
+      <!-- Port Installer -->
+      <Component Id="Esatto.VirtualPrinter.PortInstaller">
+        <File Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.PortInstaller.config">
+        <File Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath).config" KeyPath="yes" />
+      </Component>
+      <!-- Print to file target -->
+      <Component Id="Esatto.VirtualPrinter.PrintToFileTarget">
+        <File Source="$(var.Esatto.VirtualPrinter.PrintToFileTarget.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.PrintToFileTarget.config">
+        <File Source="$(var.Esatto.VirtualPrinter.PrintToFileTarget.TargetPath).config" KeyPath="yes" />
+      </Component>
+      <!-- Installer Tool -->
+      <Component Id="Esatto.VirtualPrinter.InstallerTool">
+        <File Source="$(var.Esatto.VirtualPrinter.InstallerTool.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="Esatto.VirtualPrinter.InstallerTool.config">
+        <File Source="$(var.Esatto.VirtualPrinter.InstallerTool.TargetPath).config" KeyPath="yes" />
+      </Component>
+
+    </ComponentGroup>
+    
+    <ComponentGroup Id="SystemComponents" Directory="System64Folder">
+      <Component Id="sys_Esatto.VirtualPrinter.PortMonitor.dll">
+        <File Id="sys_Esatto.VirtualPrinter.PortMonitor.dll" Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetPath)" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
