@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
+using System.Diagnostics;
 
 namespace Esatto.Win32.Registry
 {
@@ -20,8 +20,10 @@ namespace Esatto.Win32.Registry
             rkHkcuSettings, rkHkcuPolicySettings, rkHklmSettings, rkHklmPolicySettings;
         private Options SetValueOptions;
 
-        private string path = null;
+        internal string path = null;
         protected RegistryKey ConfigKey { get { return rkHkcuSettings; } }
+        [ThreadStatic]
+        internal static bool IgnoreRegistry;
 
         [Flags]
         protected enum ValueSource
@@ -67,20 +69,42 @@ namespace Esatto.Win32.Registry
             this.path = path;
             this.SetValueOptions = options;
 
+            if (IgnoreRegistry)
+            {
+                return;
+            }
+
             rkHkcu = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             rkHklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
             string pathFormat = string.Format(@"SOFTWARE\{0}", path);
             string policyPathFormat = string.Format(@"SOFTWARE\Policies\{0}", path);
 
-            if (options.HasFlag(Options.Writable))
+            try
             {
-                rkHkcuSettings = rkHkcu.CreateSubKey(pathFormat, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                if (options.HasFlag(Options.Writable))
+                {
+                    rkHkcuSettings = rkHkcu.CreateSubKey(pathFormat, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                rkHkcuSettings = rkHkcu.OpenSubKey(pathFormat, false);
+                Debug.WriteLine($"ESDBG: Could not open HKCU '{pathFormat}' for write.  Opening as read only.");
+                Debug.WriteLine($"ESDBG: {ex}");
             }
-            rkHkcuPolicySettings = rkHkcu.OpenSubKey(policyPathFormat, false);
+
+            try
+            {
+                if (rkHkcuSettings == null)
+                {
+                    rkHkcuSettings = rkHkcu.OpenSubKey(pathFormat, false);
+                }
+                rkHkcuPolicySettings = rkHkcu.OpenSubKey(policyPathFormat, false);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ESDBG: Could not open HKCU Policy '{pathFormat}' and '{policyPathFormat}' for read.  Ignoring per-user settings.");
+                Debug.WriteLine($"ESDBG: {ex}");
+            }
 
             if (options.HasFlag(Options.WriteToHkeyLocalMachine))
             {
@@ -93,12 +117,35 @@ namespace Esatto.Win32.Registry
                     // we did not get hklm open, write to HKCU instead
                     this.SetValueOptions = this.SetValueOptions & ~Options.UseHkeyLocalMachine;
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"ESDBG: Could not open HKLM '{pathFormat}' for write.  Opening as read only.");
+                    Debug.WriteLine($"ESDBG: {ex}");
+                }
             }
-            if (rkHklmSettings == null)
+
+            try
             {
-                rkHklmSettings = rkHklm.OpenSubKey(pathFormat, false);
+                if (rkHklmSettings == null)
+                {
+                    rkHklmSettings = rkHklm.OpenSubKey(pathFormat, false);
+                }
             }
-            rkHklmPolicySettings = rkHklm.OpenSubKey(policyPathFormat, false);
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ESDBG: Could not open HKLM '{pathFormat}' for read.  Ignoring per-machine settings.");
+                Debug.WriteLine($"ESDBG: {ex}");
+            }
+
+            try
+            {
+                rkHklmPolicySettings = rkHklm.OpenSubKey(policyPathFormat, false);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ESDBG: Could not open HKLM Policy '{policyPathFormat}' for read.  Ignoring per-machine GPO settings.");
+                Debug.WriteLine($"ESDBG: {ex}");
+            }
         }
 
         public void Dispose()
@@ -208,7 +255,10 @@ namespace Esatto.Win32.Registry
         private TEnum GetEnumValue<TEnum>(string name, TEnum defaultValue)
             where TEnum : struct
         {
-            Contract.Requires(typeof(TEnum).IsEnum);
+            if (!(typeof(TEnum).IsEnum))
+            {
+                throw new ArgumentException("Contract assertion not met: typeof(TEnum).IsEnum", "value");
+            }
 
             var value = GetString(name, defaultValue.ToString());
             if (value == null)

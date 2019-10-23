@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -49,13 +49,18 @@ namespace Esatto.Win32.Windows
 
         public WindowLocationMonitor(Win32Window window, Win32Window relativeTo = null)
         {
-            Contract.Requires(window != null);
+            if (window == null)
+            {
+                throw new ArgumentNullException(nameof(window), "Contract assertion not met: window != null");
+            }
 
             this.Window = window;
             this.RelativeToWindow = relativeTo ?? new Win32Window(IntPtr.Zero);
 
             this.Process = Window.GetProcess();
-            this.WindowDraggingHook = new WinEventHook(this.Process, null, WinEvent.EVENT_SYSTEM_FOREGROUND, WinEvent.EVENT_SYSTEM_MINIMIZEEND, HookOptions.None);
+            this.WindowDraggingHook = new WinEventHook(this.Process, null, 
+                WinEvent.EVENT_SYSTEM_FOREGROUND, WinEvent.EVENT_SYSTEM_MINIMIZEEND, 
+                syncCtx: SynchronizationContext.Current);
             this.WindowDraggingHook
                 .Where(c => c.WinObject == WinObject.OBJID_WINDOW && (
                 c.Event == WinEvent.EVENT_SYSTEM_FOREGROUND ||
@@ -67,7 +72,9 @@ namespace Esatto.Win32.Windows
                 .Subscribe(Hook_EventReceived);
 
             // LocationChange is required to support session connect rearrange, Win+Left, Minimize, Restore
-            this.WindowMovedHook = new WinEventHook(Window.GetProcess(), null, WinEvent.EVENT_OBJECT_LOCATIONCHANGE, WinEvent.EVENT_OBJECT_LOCATIONCHANGE, HookOptions.None);
+            this.WindowMovedHook = new WinEventHook(Window.GetProcess(), null, 
+                WinEvent.EVENT_OBJECT_LOCATIONCHANGE, WinEvent.EVENT_OBJECT_LOCATIONCHANGE,
+                syncCtx: SynchronizationContext.Current);
             this.WindowMovedHook
                 .Where(c => c.WinObject == WinObject.OBJID_WINDOW && c.Window.Handle == Window.Handle)
                 .Subscribe(Hook_EventReceived);
@@ -81,6 +88,10 @@ namespace Esatto.Win32.Windows
             }
             IsDisposed = true;
 
+            this.DragBegin = null;
+            this.DragEnd = null;
+            this.WindowMoved = null;
+            this.Exception = null;
             this.WindowDraggingHook.Dispose();
             this.WindowMovedHook.Dispose();
         }

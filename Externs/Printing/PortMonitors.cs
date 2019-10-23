@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -53,8 +52,14 @@ namespace Esatto.Win32.Printing
 
         public static PortMonitor AddPortMonitor(string portName, string dllName, string environment = null, string computerName = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(portName));
-            Contract.Requires(!string.IsNullOrEmpty(dllName));
+            if (string.IsNullOrEmpty(portName))
+            {
+                throw new ArgumentException("Contract assertion not met: !string.IsNullOrEmpty(portName)", nameof(portName));
+            }
+            if (string.IsNullOrEmpty(dllName))
+            {
+                throw new ArgumentException("Contract assertion not met: !string.IsNullOrEmpty(dllName)", nameof(dllName));
+            }
 
             if (computerName == null)
             {
@@ -81,7 +86,10 @@ namespace Esatto.Win32.Printing
 
         public static void RemovePortMonitor(string portName, string environment = null, string computerName = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(portName));
+            if (string.IsNullOrEmpty(portName))
+            {
+                throw new ArgumentException("Contract assertion not met: !string.IsNullOrEmpty(portName)", nameof(portName));
+            }
 
             if (!DeleteMonitor(computerName, environment, portName))
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -13,7 +12,10 @@ namespace Esatto.Win32.Printing
     {
         public static byte[] GetDevModeData(this PrinterSettings settings)
         {
-            Contract.Requires(settings != null);
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings), "Contract assertion not met: settings != null");
+            }
 
             byte[] devModeData;
             RuntimeHelpers.PrepareConstrainedRegions();
@@ -51,9 +53,18 @@ namespace Esatto.Win32.Printing
 
         public static void SetDevModeData(this PrinterSettings settings, byte[] data)
         {
-            Contract.Requires(settings != null);
-            Contract.Requires(data != null);
-            Contract.Requires(data.Length >= Marshal.SizeOf(typeof(NativeMethods.DEVMODE)));
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings), "Contract assertion not met: settings != null");
+            }
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data), "Contract assertion not met: data != null");
+            }
+            if (!(data.Length >= Marshal.SizeOf(typeof(NativeMethods.DEVMODE))))
+            {
+                throw new ArgumentException("Contract assertion not met: data.Length >= Marshal.SizeOf(typeof(NativeMethods.DEVMODE))", nameof(data));
+            }
 
             RuntimeHelpers.PrepareConstrainedRegions();
             try

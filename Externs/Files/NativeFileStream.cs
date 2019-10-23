@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.KtmIntegration;
-using System.Diagnostics.Contracts;
 using System.ComponentModel;
 
 namespace Esatto.Win32.CommonControls.Files

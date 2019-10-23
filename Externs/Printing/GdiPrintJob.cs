@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -46,8 +45,14 @@ namespace Esatto.Win32.Printing
         /// <param name="outputFileName"></param>
         public GdiPrintJob(string PrinterName, string dataType, string jobName, string outputFileName)
         {
-            Contract.Requires(!String.IsNullOrEmpty(PrinterName));
-            Contract.Requires(!String.IsNullOrEmpty(dataType));
+            if (String.IsNullOrEmpty(PrinterName))
+            {
+                throw new ArgumentException("Contract assertion not met: !String.IsNullOrEmpty(PrinterName)", nameof(PrinterName));
+            }
+            if (String.IsNullOrEmpty(dataType))
+            {
+                throw new ArgumentException("Contract assertion not met: !String.IsNullOrEmpty(dataType)", nameof(dataType));
+            }
 
             SafePrinterHandle hPrinter;
             if (!NativeMethods.OpenPrinter(PrinterName, out hPrinter, IntPtr.Zero))
@@ -102,8 +107,14 @@ namespace Esatto.Win32.Printing
         /// <param name="data"></param>
         public void WritePage(Stream data)
         {
-            Contract.Requires(data != null);
-            Contract.Requires(data.CanRead);
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data), "Contract assertion not met: data != null");
+            }
+            if (!(data.CanRead))
+            {
+                throw new ArgumentException("Contract assertion not met: data.CanRead", nameof(data));
+            }
 
             // we own the stream once we have it
             using (data)

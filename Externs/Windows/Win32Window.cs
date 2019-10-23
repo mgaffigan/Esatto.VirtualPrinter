@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -56,14 +55,20 @@ namespace Esatto.Win32.Windows
 
         public Point TransformTo(Win32Window other, Point client)
         {
-            Contract.Requires(other != null);
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other), "Contract assertion not met: other != null");
+            }
 
             return NativeMethods.MapWindowPoint(Handle, other.Handle, client);
         }
 
         public Rect TransformTo(Win32Window other, Rect client)
         {
-            Contract.Requires(other != null);
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other), "Contract assertion not met: other != null");
+            }
 
             var topLeft = TransformTo(other, client.Location);
             return new Rect(topLeft, client.Size);
@@ -73,7 +78,10 @@ namespace Esatto.Win32.Windows
 
         public Win32Window FindChildOrDefault(Predicate<Win32Window> predicate)
         {
-            Contract.Requires(predicate != null);
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate), "Contract assertion not met: predicate != null");
+            }
 
             Win32Window findResult = null;
             NativeMethods.FirstChildWindow(this.Handle, hwnd =>
@@ -99,7 +107,10 @@ namespace Esatto.Win32.Windows
 
         public Win32Window FindChild(Predicate<Win32Window> predicate)
         {
-            Contract.Requires(predicate != null);
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate), "Contract assertion not met: predicate != null");
+            }
 
             var findResult = FindChildOrDefault(predicate);
             if (findResult == null)
@@ -111,7 +122,10 @@ namespace Esatto.Win32.Windows
 
         public static Win32Window Find(Process process, Predicate<Win32Window> predicate)
         {
-            Contract.Requires(predicate != null);
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate), "Contract assertion not met: predicate != null");
+            }
 
             Win32Window findResult = null;
             NativeMethods.FirstChildWindow(process, hwnd =>

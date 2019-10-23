@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +47,10 @@ namespace Esatto.Win32.Com
 
         public static object CreateLocalServer(string progid)
         {
-            Contract.Requires(!string.IsNullOrEmpty(progid));
+            if (string.IsNullOrEmpty(progid))
+            {
+                throw new ArgumentException("Contract assertion not met: !string.IsNullOrEmpty(progid)", nameof(progid));
+            }
 
             Guid clsid;
             CLSIDFromProgID(progid, out clsid);
@@ -61,7 +63,10 @@ namespace Esatto.Win32.Com
 
         public static void RunImpersonated(Action action)
         {
-            Contract.Requires(action != null);
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action), "Contract assertion not met: action != null");
+            }
 
             RuntimeHelpers.PrepareConstrainedRegions();
             try { /* cer */}

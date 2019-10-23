@@ -12,7 +12,7 @@ using Rect = System.Windows.Rect;
 
 namespace Esatto.Win32.Windows
 {
-    internal static class NativeMethods
+    internal static partial class NativeMethods
     {
         private const string User32 = "user32.dll";
         internal const int MAX_PATH = 260;

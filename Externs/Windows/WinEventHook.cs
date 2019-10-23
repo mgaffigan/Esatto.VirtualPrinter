@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -23,15 +22,30 @@ namespace Esatto.Win32.Windows
         private readonly int? ThreadID;
         private readonly WinEvent MinEvent;
         private readonly WinEvent MaxEvent;
+        private readonly SynchronizationContext SyncCtx;
+        private readonly Action<Action> CallbackContext;
 
-        public WinEventHook(Process process, int? threadId, WinEvent minEvent, WinEvent maxEvent, HookOptions options = HookOptions.None)
+        public WinEventHook(Process process, int? threadId, WinEvent minEvent, WinEvent maxEvent, HookOptions options)
+            : this(process, threadId, minEvent, maxEvent, options, null)
         {
+        }
+
+        public WinEventHook(Process process, int? threadId, WinEvent minEvent, WinEvent maxEvent, HookOptions options = HookOptions.None, SynchronizationContext syncCtx = null)
+        {
+            if (!(syncCtx != null || !options.HasFlag(HookOptions.AsyncCallbacks)))
+            {
+                throw new ArgumentException("Contract assertion not met: syncCtx != null || !options.HasFlag(HookOptions.AsyncCallbacks)", nameof(syncCtx));
+            }
+
             this.thCreated = Thread.CurrentThread;
             this.Observers = new List<IObserver<WinEventEventArgs>>();
             this.Process = process;
             this.ThreadID = threadId;
             this.MinEvent = minEvent;
             this.MaxEvent = maxEvent;
+            this.SyncCtx = syncCtx;
+            this.CallbackContext = options.HasFlag(HookOptions.AsyncCallbacks) 
+                ? new Action<Action>(CallbackAsync) : new Action<Action>(CallbackSyncIfNeeded);
 
             // EventProcHandle is the callback to CLR code, and must be valid.  We take a new GCRoot
             // and only release once a successfull Unhook occurs
@@ -42,6 +56,26 @@ namespace Esatto.Win32.Windows
             {
                 StartInternal();
             }
+        }
+
+        private void CallbackSyncIfNeeded(Action functor)
+        {
+            if (Thread.CurrentThread == thCreated || SyncCtx == null)
+            {
+                functor();
+            }
+            else
+            {
+                SyncCtx.Send(_1 => functor(), null);
+            }
+        }
+
+        private void CallbackAsync(Action functor)
+        {
+            SyncCtx.Post(_1 =>
+            {
+                functor();
+            }, null);
         }
 
         public bool IsEnabled
@@ -65,7 +99,10 @@ namespace Esatto.Win32.Windows
 
         private void StartInternal()
         {
-            Contract.Assert(!IsEnabled);
+            if (IsEnabled)
+            {
+                throw new ArgumentException("Contract assertion not met: !IsEnabled", "value");
+            }
             AssertThreading();
 
             this.Handle = NativeMethods.SetWinEventHook(MinEvent, MaxEvent, IntPtr.Zero,
@@ -79,7 +116,10 @@ namespace Esatto.Win32.Windows
 
         private void StopInternal()
         {
-            Contract.Assert(IsEnabled);
+            if (!(IsEnabled))
+            {
+                throw new ArgumentException("Contract assertion not met: IsEnabled", "value");
+            }
             AssertThreading();
 
             if (!NativeMethods.UnhookWinEvent(Handle))
@@ -94,11 +134,14 @@ namespace Esatto.Win32.Windows
         {
             var args = new WinEventEventArgs(this, @event, hwnd, objectId, childId, thread, time);
 
-            HookTriggered?.Invoke(this, args);
-            foreach (var s in Observers)
+            CallbackContext(() =>
             {
-                s.OnNext(args);
-            }
+                HookTriggered?.Invoke(this, args);
+                foreach (var s in Observers)
+                {
+                    s.OnNext(args);
+                }
+            });
         }
 
         #region IObservable
@@ -151,6 +194,9 @@ namespace Esatto.Win32.Windows
 
         public void Dispose()
         {
+            HookTriggered = null;
+            Observers = new List<IObserver<WinEventEventArgs>>();
+
             // Unhook only works from original thread
             AssertThreading();
             if (isDisposed)

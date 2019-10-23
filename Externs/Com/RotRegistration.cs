@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +24,14 @@ namespace Esatto.Win32.Com
 
         public RotRegistration(string moniker, object o)
         {
-            Contract.Requires(!String.IsNullOrEmpty(moniker));
-            Contract.Requires(o != null);
+            if (String.IsNullOrEmpty(moniker))
+            {
+                throw new ArgumentException("Contract assertion not met: !String.IsNullOrEmpty(moniker)", nameof(moniker));
+            }
+            if (o == null)
+            {
+                throw new ArgumentNullException(nameof(o), "Contract assertion not met: o != null");
+            }
 
             this.Target = o;
 
@@ -37,7 +42,10 @@ namespace Esatto.Win32.Com
 
         public static object GetRegisteredObject(string moniker)
         {
-            Contract.Requires(!String.IsNullOrEmpty(moniker));
+            if (String.IsNullOrEmpty(moniker))
+            {
+                throw new ArgumentException("Contract assertion not met: !String.IsNullOrEmpty(moniker)", nameof(moniker));
+            }
 
             var rot = GetRunningObjectTable(0);
             var imoniker = CreateItemMoniker("!", moniker);

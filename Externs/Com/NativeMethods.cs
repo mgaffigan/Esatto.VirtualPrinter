@@ -45,7 +45,7 @@ namespace Esatto.Win32.Com
         public static extern IMoniker CreateItemMoniker([In] string lpszDelim, [In] string lpszItem);
 
         [DllImport(Ole32, ExactSpelling = true, PreserveSig = false)]
-        [return: MarshalAs(UnmanagedType.Interface)]
+        [return: MarshalAs(UnmanagedType.IUnknown)]
         public static extern object CoCreateInstance(
            [In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
            [MarshalAs(UnmanagedType.IUnknown)] object pUnkOuter,

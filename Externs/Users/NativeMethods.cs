@@ -45,14 +45,12 @@ namespace Esatto.Win32.Users
             return userName.ToString();
         }
 
-        public static string GetUserFullName()
-        {
-            return GetUserName(EXTENDED_NAME_FORMAT.NameDisplay);
-        }
+        public static string GetUserFullName() => GetUserName(EXTENDED_NAME_FORMAT.NameDisplay);
 
-        public static string GetSamCompatibleName()
-        {
-            return GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible);
-        }
+        public static string GetSamCompatibleName() => GetUserName(EXTENDED_NAME_FORMAT.NameSamCompatible);
+
+        public static string GetUserPrincipalName() => GetUserName(EXTENDED_NAME_FORMAT.NameUserPrincipal);
+
+        public static string GetDisplayName() => GetUserName(EXTENDED_NAME_FORMAT.NameDisplay);
     }
 }

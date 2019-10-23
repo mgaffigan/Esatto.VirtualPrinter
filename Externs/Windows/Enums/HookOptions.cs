@@ -10,6 +10,7 @@ namespace Esatto.Win32.Windows
     public enum HookOptions
     {
         None = 0,
-        StartDisabled = 1
+        StartDisabled = 1,
+        AsyncCallbacks = 2
     }
 }

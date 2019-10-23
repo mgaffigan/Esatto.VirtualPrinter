@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
 namespace Esatto.Win32.Com
@@ -19,9 +18,18 @@ namespace Esatto.Win32.Com
 
         public StaClassFactory(Type tClass, Func<object> constructor)
         {
-            Contract.Requires(constructor != null);
-            Contract.Requires(tClass != null);
-            Contract.Requires(tClass.IsClass);
+            if (constructor == null)
+            {
+                throw new ArgumentNullException(nameof(constructor), "Contract assertion not met: constructor != null");
+            }
+            if (tClass == null)
+            {
+                throw new ArgumentNullException(nameof(tClass), "Contract assertion not met: tClass != null");
+            }
+            if (!(tClass.IsClass))
+            {
+                throw new ArgumentException("Contract assertion not met: tClass.IsClass", nameof(tClass));
+            }
 
             this.Constructor = constructor;
             this.ClassType = tClass;
