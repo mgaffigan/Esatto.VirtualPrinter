@@ -61,7 +61,7 @@ namespace Esatto.VirtualPrinter.InstallerTool
         {
             using (var config = new VirtualPrinterSystemConfiguration(VirtualPrinterConfigurationAccessLevel.ReadOnly))
             {
-                foreach (VirtualPrinterConfiguration queue in config.Printers)
+                foreach (var queue in config.Printers)
                 {
                     Console.WriteLine("Name:    \"{0}\"", queue.Name);
                     Console.WriteLine("Type:    \"{0}\"", queue.HandlerTypeName);
