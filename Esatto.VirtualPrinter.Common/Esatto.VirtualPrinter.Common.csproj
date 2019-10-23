@@ -124,7 +124,6 @@
     <ItemGroup>
       <OldExternToDelete Include="$(ExternsDir)**\*.cs" />
     </ItemGroup>
-    <Delete Files="@(OldExternToDelete)" />
     <Copy SourceFiles="@(IncludedExtern)" DestinationFiles="$(ExternsDir)%(RecursiveDir)%(Filename)%(Extension)" />
   </Target>
   
