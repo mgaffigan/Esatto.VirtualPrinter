@@ -12,6 +12,8 @@
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="ProductDriverComponents" />
       <ComponentGroupRef Id="SystemComponents" />
+
+      <MergeRef Id="msvcr" />
     </Feature>
   </Product>
 
@@ -27,6 +29,29 @@
       </Directory>
       <Directory Id="ProgramMenuFolder" />
     </Directory>
+
+    <SetProperty Id="ItpInstallPort" Value="&quot;[#Esatto.VirtualPrinter.PortInstaller]&quot; install" Before="ItpInstallPort" Sequence="execute" />
+    <CustomAction Id="ItpInstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <SetProperty Id="ItpUninstallPort" Value="&quot;[#Esatto.VirtualPrinter.PortInstaller]&quot; uninstall" Before="ItpUninstallPort" Sequence="execute" />
+    <CustomAction Id="ItpUninstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <InstallExecuteSequence>
+      <Custom Action="ItpInstallPort" Before="InstallFinalize">
+        (REINSTALL&lt;&gt;"") OR (REMOVE="")
+      </Custom>
+      <Custom Action="ItpUninstallPort" Before="ItpInstallPort">
+        REMOVE
+      </Custom>
+    </InstallExecuteSequence>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <?if $(var.Configuration) = Debug ?>
+      <Merge Id="msvcr" SourceFile="..\Libs\Microsoft_VC142_DebugCRT_x64.msm" DiskId="1" Language="1033" />
+      <?else?>
+      <Merge Id="msvcr" SourceFile="..\Libs\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="1033" />
+      <?endif?>
+    </DirectoryRef>
   </Fragment>
 
   <Fragment>
@@ -60,7 +85,7 @@
       <Component Id="Esatto.VirtualPrinter.PortMonitor.dll">
         <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetPath)" KeyPath="yes" />
       </Component>
-      
+
       <!-- Printer driver -->
       <Component Id="Esatto.VirtualPrinter.Driver.inf">
         <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2.inf" KeyPath="yes" />
@@ -75,11 +100,12 @@
       <Component Id="Esatto.VirtualPrinter.Driver.xml">
         <File Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetDir)Esatto.VirtualPrinter.Driver\esattovp2-PipelineConfig.xml" KeyPath="yes" />
       </Component>
-    
+
       <!-- Installers -->
       <!-- Port Installer -->
       <Component Id="Esatto.VirtualPrinter.PortInstaller">
-        <File Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath)" KeyPath="yes" />
+        <!-- Called by Custom Actions so ID is required -->
+        <File Id="Esatto.VirtualPrinter.PortInstaller" Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath)" KeyPath="yes" />
       </Component>
       <Component Id="Esatto.VirtualPrinter.PortInstaller.config">
         <File Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath).config" KeyPath="yes" />
@@ -100,7 +126,7 @@
       </Component>
 
     </ComponentGroup>
-    
+
     <ComponentGroup Id="SystemComponents" Directory="System64Folder">
       <Component Id="sys_Esatto.VirtualPrinter.PortMonitor.dll">
         <File Id="sys_Esatto.VirtualPrinter.PortMonitor.dll" Source="$(var.Esatto.VirtualPrinter.PortMonitor.TargetPath)" KeyPath="yes" />
