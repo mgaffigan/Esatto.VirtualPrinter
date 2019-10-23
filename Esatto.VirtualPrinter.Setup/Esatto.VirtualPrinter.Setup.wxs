@@ -31,26 +31,23 @@
     </Directory>
 
     <SetProperty Id="ItpInstallPort" Value="&quot;[#Esatto.VirtualPrinter.PortInstaller]&quot; install" Before="ItpInstallPort" Sequence="execute" />
-    <CustomAction Id="ItpInstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="ItpInstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Impersonate="no" Return="ignore" />
 
     <SetProperty Id="ItpUninstallPort" Value="&quot;[#Esatto.VirtualPrinter.PortInstaller]&quot; uninstall" Before="ItpUninstallPort" Sequence="execute" />
-    <CustomAction Id="ItpUninstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="ItpUninstallPort" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Impersonate="no" Return="ignore" />
 
     <InstallExecuteSequence>
+      <!-- https://stackoverflow.com/a/17608049/138200 for conditions -->
       <Custom Action="ItpInstallPort" Before="InstallFinalize">
         (REINSTALL&lt;&gt;"") OR (REMOVE="")
       </Custom>
       <Custom Action="ItpUninstallPort" Before="ItpInstallPort">
-        REMOVE
+        (NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
       </Custom>
     </InstallExecuteSequence>
 
     <DirectoryRef Id="INSTALLFOLDER">
-      <?if $(var.Configuration) = Debug ?>
-      <Merge Id="msvcr" SourceFile="..\Libs\Microsoft_VC142_DebugCRT_x64.msm" DiskId="1" Language="1033" />
-      <?else?>
       <Merge Id="msvcr" SourceFile="..\Libs\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="1033" />
-      <?endif?>
     </DirectoryRef>
   </Fragment>
 
@@ -103,6 +100,10 @@
 
       <!-- Installers -->
       <!-- Port Installer -->
+      <Component Id="Driver.Esatto.VirtualPrinter.Common.dll">
+        <!-- There seems to be a delayed effect of installing .net gac assemblies, so a local copy is required for port install -->
+        <File Id="Driver.Esatto.VirtualPrinter.Common.dll" KeyPath="yes" Source="$(var.Esatto.VirtualPrinter.Common.TargetPath)" />
+      </Component>
       <Component Id="Esatto.VirtualPrinter.PortInstaller">
         <!-- Called by Custom Actions so ID is required -->
         <File Id="Esatto.VirtualPrinter.PortInstaller" Source="$(var.Esatto.VirtualPrinter.PortInstaller.TargetPath)" KeyPath="yes" />
