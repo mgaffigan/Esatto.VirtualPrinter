@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esatto.VirtualPrinter.Common", "Esatto.VirtualPrinter.Common\Esatto.VirtualPrinter.Common.csproj", "{B15063B4-0D99-496B-81BE-92CD2E47CA4D}"
 EndProject
@@ -100,7 +100,7 @@ Global
 		{7727D082-19B1-48AD-A381-8EAFC712469D}.Debug|x64.Build.0 = Debug|x64
 		{7727D082-19B1-48AD-A381-8EAFC712469D}.Debug|x86.ActiveCfg = Debug|x86
 		{7727D082-19B1-48AD-A381-8EAFC712469D}.Debug|x86.Build.0 = Debug|x86
-		{7727D082-19B1-48AD-A381-8EAFC712469D}.Release|x64.ActiveCfg = Release|x86
+		{7727D082-19B1-48AD-A381-8EAFC712469D}.Release|x64.ActiveCfg = Release|x64
 		{7727D082-19B1-48AD-A381-8EAFC712469D}.Release|x86.ActiveCfg = Release|x86
 		{7727D082-19B1-48AD-A381-8EAFC712469D}.Release|x86.Build.0 = Release|x86
 		{146ABB7F-4CB7-41FE-A0E7-408C1438CC32}.Debug|x64.ActiveCfg = Debug|x64
@@ -137,5 +137,8 @@ Global
 		{7727D082-19B1-48AD-A381-8EAFC712469D} = {0C3C63CB-F0DB-47C3-B6AC-95F441D4ADD5}
 		{146ABB7F-4CB7-41FE-A0E7-408C1438CC32} = {1B796C15-E926-4E2E-9969-9C4880F487F2}
 		{C01AD69E-50A0-4C86-9EAE-918827D70B23} = {1B796C15-E926-4E2E-9969-9C4880F487F2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FD1BC1B-B7CF-45D4-A14A-8D70FD056BCF}
 	EndGlobalSection
 EndGlobal
