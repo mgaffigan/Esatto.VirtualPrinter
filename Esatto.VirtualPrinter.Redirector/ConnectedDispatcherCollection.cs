@@ -58,7 +58,9 @@ namespace Esatto.VirtualPrinter.Redirector
                 {
                     client.Ping();
                 }
-                catch (COMException)
+                // Can't really catch a specific exception here.  Get a variety of ComException, 
+                // InvalidCastException, Win32Exception
+                catch
                 {
                     this.Dispatchers.Remove(client);
                     this.ReevaluateCleanupTimer();
