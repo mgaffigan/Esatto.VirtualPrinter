@@ -283,6 +283,31 @@ namespace Esatto.Win32.Registry
 
         #endregion
 
+        #region Subkeys
+
+        protected HashSet<string> GetSubkeyNames()
+        {
+            var results = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            AddRangeToCollection(results, rkHkcuSettings?.GetSubKeyNames());
+            AddRangeToCollection(results, rkHklmSettings?.GetSubKeyNames());
+            return results;
+        }
+
+        private void AddRangeToCollection<T>(ICollection<T> collection, IEnumerable<T> newItems)
+        {
+            if (newItems == null)
+            {
+                return;
+            }
+
+            foreach (var n in newItems)
+            {
+                collection.Add(n);
+            }
+        }
+
+        #endregion
+
         #region values
 
         protected object GetValue(string name, object defaultValue)
