@@ -11,11 +11,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using WpfDispatcher = System.Windows.Threading.Dispatcher;
+using static Esatto.Win32.Com.NativeMethods;
 
 namespace Esatto.VirtualPrinter.Dispatcher
 {
-    using static Win32.Com.NativeMethods;
-
     [ComVisible(true), ClassInterface(ClassInterfaceType.None), ProgId(IpcConstants.DispatcherProgId)]
     public sealed class PrintDispatcher : StandardOleMarshalObject, IDisposable, IPrintDispatcher
     {

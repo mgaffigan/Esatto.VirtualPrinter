@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using static Esatto.Win32.Com.NativeMethods;
 
 namespace Esatto.VirtualPrinter.Redirector
 {
-    using static Win32.Com.NativeMethods;
-
     internal sealed class ConnectedDispatcherCollection : IDisposable
     {
         private readonly object syncList = new object();
