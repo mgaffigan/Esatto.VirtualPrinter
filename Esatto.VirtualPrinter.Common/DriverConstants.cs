@@ -12,6 +12,7 @@ namespace Esatto.VirtualPrinter
         public const string DispatcherFilename = "Esatto.VirtualPrinter.Dispatcher.exe";
         public const string DriverManufacturer = "In Touch Pharmaceuticals";
         public const string DriverModelName = "Esatto Virtual Printer v2";
+        public const string DriverInfName = "esattovp2.inf";
         public const string PortDescription = "Esatto Virtual Printer Port";
         public const string PortDisplayName = "Esatto Virtual Printer Port";
         public const string PortDllName = "EsPortMon2.dll";

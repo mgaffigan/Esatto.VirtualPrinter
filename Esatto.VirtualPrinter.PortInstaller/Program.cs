@@ -1,4 +1,5 @@
-﻿using Esatto.Win32.Printing;
+﻿using Esatto.VirtualPrinter.Win32.Printing;
+using Esatto.Win32.Printing;
 using System;
 using System.IO;
 
@@ -67,7 +68,36 @@ namespace Esatto.VirtualPrinter.PortInstaller
 
         private static void RunInstallDriver(string[] args)
         {
+            string infName, driverName;
+            if (args.Length == 1)
+            {
+                infName = DriverInfName;
+                driverName = DriverModelName;
+            }
+            else if (args.Length == 2)
+            {
+                infName = args[1];
+                driverName = DriverModelName;
+            }
+            else if (args.Length == 3)
+            {
+                infName = args[1];
+                driverName = args[2];
+            }
+            else
+            {
+                WriteUsage();
+                return;
+            }
 
+            string path = Path.Combine(Environment.CurrentDirectory, infName);
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"Driver inf does not exist at '{path}', exiting.");
+                return;
+            }
+
+            PrinterDriver.InstallInf(infName, driverName);
         }
 
         private static void RunUninstall(string[] args)
@@ -98,6 +128,11 @@ namespace Esatto.VirtualPrinter.PortInstaller
             Console.WriteLine("           Install an arbitrary port monitor");
             Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe uninstall \"display name\"");
             Console.WriteLine("           Uninstall an arbitrary port monitor");
+            Console.WriteLine();
+            Console.WriteLine("Usage: Esatto.VirtualPrinter.PortInstaller.exe installdriver");
+            Console.WriteLine("           Install the Esatto Virtual Printer driver");
+            Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe installdriver foo.inf \"driver name\"");
+            Console.WriteLine("           Install an arbitrary printer driver");
             Environment.Exit(-1);
         }
     }

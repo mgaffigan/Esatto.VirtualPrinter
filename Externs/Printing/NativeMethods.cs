@@ -61,6 +61,19 @@ namespace Esatto.Win32.Printing
         [DllImport(Winspool, SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool EnumMonitors(string pName, uint level, IntPtr pMonitorBuf, int cbMonitorBuf, out int pcbNeeded, out int pcReturned);
 
+        public const int
+            UPDP_SILENT_UPLOAD = 1,
+            UPDP_UPLOAD_ALWAYS = 2,
+            IPDFP_COPY_ALL_FILES = 1;
+
+        [DllImport(Winspool, SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+        internal static extern void UploadPrinterDriverPackage(string serverName, string infPath, string environment,
+            int flags, IntPtr hwnd, IntPtr pDestInfPath, ref int cchDestInfPath);
+
+        [DllImport(Winspool, SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+        internal static extern void InstallPrinterDriverFromPackage(string serverName, string infPath, string driverName,
+            string environment, int flags);
+
         #endregion
 
         #region Kernel32
