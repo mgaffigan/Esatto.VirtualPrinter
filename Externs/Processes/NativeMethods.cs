@@ -43,7 +43,7 @@ namespace Esatto.Win32.Processes
         [DllImport(Advapi32, ExactSpelling = true, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static extern bool AdjustTokenPrivileges(SafeTokenHandle TokenHandle, bool DisableAllPrivileges,
-            ref TOKEN_PRIVILEGE NewState, uint BufferLength, ref TOKEN_PRIVILEGE PreviousState, ref uint ReturnLength);
+            IntPtr NewState, uint BufferLength, IntPtr PreviousState, out uint ReturnLength);
 
         [DllImport(Advapi32, ExactSpelling = true, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
@@ -51,15 +51,15 @@ namespace Esatto.Win32.Processes
 
         [DllImport(Advapi32, CharSet = CharSet.Unicode, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LUID Luid);
+        public static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, out LUID Luid);
 
         [DllImport(Advapi32, ExactSpelling = true, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static extern bool OpenProcessToken(IntPtr ProcessToken, TokenAccessLevels DesiredAccess, ref SafeTokenHandle TokenHandle);
+        public static extern bool OpenProcessToken(IntPtr ProcessToken, TokenAccessLevels DesiredAccess, out SafeTokenHandle TokenHandle);
 
         [DllImport(Advapi32, ExactSpelling = true, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static extern bool OpenThreadToken(IntPtr ThreadToken, TokenAccessLevels DesiredAccess, bool OpenAsSelf, ref SafeTokenHandle TokenHandle);
+        public static extern bool OpenThreadToken(IntPtr ThreadToken, TokenAccessLevels DesiredAccess, bool OpenAsSelf, out SafeTokenHandle TokenHandle);
 
         [DllImport(Advapi32, ExactSpelling = true, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
