@@ -1,5 +1,4 @@
-﻿using Esatto.VirtualPrinter.Win32.Printing;
-using Esatto.Win32.Printing;
+﻿using Esatto.Win32.Printing;
 using System;
 using System.IO;
 

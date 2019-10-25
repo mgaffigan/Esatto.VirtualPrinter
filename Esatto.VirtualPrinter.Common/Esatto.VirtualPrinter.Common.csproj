@@ -77,6 +77,9 @@
     <Compile Include="..\Externs\Printing\PortMonitors.cs">
       <Link>Win32\Printing\PortMonitors.cs</Link>
     </Compile>
+    <Compile Include="..\Externs\Printing\PrinterDriver.cs">
+      <Link>Win32\Printing\PrinterDriver.cs</Link>
+    </Compile>
     <Compile Include="..\Externs\Printing\SafePrinterHandle.cs">
       <Link>Win32\Printing\SafePrinterHandle.cs</Link>
     </Compile>
@@ -104,7 +107,6 @@
     <Compile Include="IPC\IPrintTarget.cs" />
     <Compile Include="IPC\PrintJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Win32\Printing\PrinterDriver.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

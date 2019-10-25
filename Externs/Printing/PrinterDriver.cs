@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Esatto.Win32.Printing.NativeMethods;
 
-namespace Esatto.VirtualPrinter.Win32.Printing
+namespace Esatto.Win32.Printing
 {
     public static class PrinterDriver
     {
