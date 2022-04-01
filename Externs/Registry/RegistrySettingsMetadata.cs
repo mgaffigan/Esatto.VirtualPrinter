@@ -132,10 +132,6 @@ namespace Esatto.Win32.Registry
             {
                 paramType |= ParameterizationType.StringParam;
             }
-            if (paramType == ParameterizationType.Unknown)
-            {
-                throw new NotSupportedException($"No understandable constructor found for type {tRegistrySettings}.  Expected .ctor() or .ctor(string)");
-            }
 
             return paramType;
         }
@@ -214,7 +210,9 @@ namespace Esatto.Win32.Registry
             {
                 return RegistryValueKind.MultiString;
             }
-            else throw new NotSupportedException($"Unknown type {propertyType}");
+            // Most of the time, this is correct. Exporter works better with this.
+            // throw new NotSupportedException($"Unknown type {propertyType}");
+            else return RegistryValueKind.String;
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Esatto.Win32.Com
         public const int E_NOINTERFACE = unchecked((int)0x80004002);
         public const int MK_E_UNAVAILABLE = unchecked((int)0x800401E3);
         public const int S_OK = 0;
+        public const int ASFW_ANY = -1;
 
         [DllImport(Ole32, PreserveSig = false)]
         public static extern void CoResumeClassObjects();

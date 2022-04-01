@@ -338,15 +338,29 @@ namespace Esatto.Win32.Registry
             return ValueSource.Default;
         }
 
-        protected void SetValue(string name, object defaultValue, RegistryValueKind kind)
+        protected void SetValue(string name, object value, RegistryValueKind kind)
         {
             if (SetValueOptions.HasFlag(Options.WriteToHkeyLocalMachine))
             {
-                rkHklmSettings.SetValue(name, defaultValue, kind);
+                if (value == null)
+                {
+                    rkHklmSettings.DeleteValue(name);
+                }
+                else
+                {
+                    rkHklmSettings.SetValue(name, value, kind);
+                }
             }
             else
             {
-                rkHkcuSettings.SetValue(name, defaultValue, kind);
+                if (value == null)
+                {
+                    rkHkcuSettings.DeleteValue(name);
+                }
+                else
+                {
+                    rkHkcuSettings.SetValue(name, value, kind);
+                }
             }
 
             Notify(name);

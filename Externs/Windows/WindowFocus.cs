@@ -25,5 +25,11 @@ namespace Esatto.Win32.Windows
                 Debug.WriteLine($"CoAllowSetForegroundWindow failed\r\n{ex}");
             }
         }
+
+        public static void AllowSetForegroundWindow()
+            => AllowSetForegroundWindow(Com.NativeMethods.ASFW_ANY);
+
+        private static void AllowSetForegroundWindow(int pid) 
+            => Com.NativeMethods.AllowSetForegroundWindow(pid);
     }
 }
