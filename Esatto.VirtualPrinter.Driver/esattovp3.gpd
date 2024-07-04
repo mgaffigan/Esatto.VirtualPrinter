@@ -1,5 +1,6 @@
 *%
 *% Copyright (c) 2016 In Touch Pharmaceuticals
+*% Copyright (c) 2024 In Touch Technologies
 *%
 *% All rights reserved.
 *%
@@ -9,7 +10,7 @@
 *GPDFileName:    "XDSmpl.gpd"
 *Include:        "msxpsinc.gpd"
 *Include:        "StdNames.gpd"
-*ModelName:      "Esatto Virtual Printer v2"
+*ModelName:      "Esatto Virtual Printer v3"
 *MasterUnits:    PAIR(1200, 1200)
 *ResourceDLL:    "unires.dll"
 *PrinterType:    PAGE

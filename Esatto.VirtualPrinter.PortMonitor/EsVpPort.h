@@ -1,5 +1,7 @@
 #pragma once
 
+typedef wil::unique_any<HANDLE, decltype(&::ClosePrinter), ::ClosePrinter> unique_hprinter;
+
 #define INVALID_JOB_ID (-1)
 
 class EsVpPort
@@ -10,19 +12,20 @@ private:
 	std::wstring DocumentName;
 	std::wstring Datatype;
 	std::wstring TempFileName;
+	std::wstring TargetExe;
+	std::wstring TargetArguments;
 
-	HANDLE hPrinter;
-	HANDLE hTempFile;
+	unique_hprinter hPrinter;
+	wil::unique_hfile hTempFile;
 
-	void Cleanup();
+	HRESULT EndDocInternal();
 
 public:
 	EsVpPort(std::wstring portName);
 	~EsVpPort();
 
-	bool TryStartDoc(std::wstring printerName, int jobId, DOC_INFO_1* pDocInfo);
-	bool WritePort(LPBYTE  pBuffer, DWORD cbBuf, _Out_ LPDWORD pcbWritten);
-	bool EndDoc();
-	bool ClosePort();
+	HRESULT TryStartDoc(std::wstring printerName, int jobId, DOC_INFO_1* pDocInfo);
+	HRESULT WritePort(LPBYTE  pBuffer, DWORD cbBuf, _Out_ LPDWORD pcbWritten);
+	HRESULT EndDoc();
 };
 

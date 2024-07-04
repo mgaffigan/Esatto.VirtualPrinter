@@ -7,14 +7,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="esattovp2.gpd" />
+    <None Include="esattovp3.gpd" />
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="esattovp2.inf">
+    <Inf Include="esattovp3.inf">
       <Filter>Driver Files</Filter>
     </Inf>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="esattovp2-PipelineConfig.xml" />
+    <Xml Include="esattovp3-PipelineConfig.xml" />
   </ItemGroup>
 </Project>

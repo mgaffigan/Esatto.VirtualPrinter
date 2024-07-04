@@ -40,20 +40,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="esattovp2.gpd" />
+    <None Include="esattovp3.gpd" />
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="esattovp2.inf" />
+    <Inf Include="esattovp3.inf" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="esattovp2-PipelineConfig.xml" />
+    <Xml Include="esattovp3-PipelineConfig.xml" />
   </ItemGroup>
   <ItemGroup>
-    <FilesToPackage Include="esattovp2-PipelineConfig.xml">
+    <FilesToPackage Include="esattovp3-PipelineConfig.xml">
       <PackageRelativeDirectory>
       </PackageRelativeDirectory>
     </FilesToPackage>
-    <FilesToPackage Include="esattovp2.gpd">
+    <FilesToPackage Include="esattovp3.gpd">
       <PackageRelativeDirectory>
       </PackageRelativeDirectory>
     </FilesToPackage>
@@ -229,6 +229,11 @@
     <VerifyDrivers />
     <VerifyFlags>133563</VerifyFlags>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DriverSign>
+      <FileDigestAlgorithm>SHA256</FileDigestAlgorithm>
+    </DriverSign>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

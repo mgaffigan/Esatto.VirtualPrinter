@@ -5,7 +5,7 @@ MONITOR2 g_dispatchTable;
 
 void InitializeDispatchTable(PMONITOR2 dt);
 
-LPMONITOR2 InitializePrintMonitor2(
+LPMONITOR2 WINAPI InitializePrintMonitor2(
 	_In_    PMONITORINIT pMonitorInit,
 	_Out_   PHANDLE phMonitor)
 {
@@ -32,7 +32,7 @@ BOOL WINAPI LcmEnumPorts(
 	// pName is server name for cross server enumeration.
 	UNREFERENCED_PARAMETER(pName);
 
-	if (!hMonitor)
+	if (!hMonitor || !pPorts)
 	{
 		SetLastError(ERROR_INVALID_PARAMETER);
 		*pcbNeeded = 0;
@@ -167,7 +167,9 @@ BOOL WINAPI LcmStartDocPort(
 
 	auto pPort = reinterpret_cast<EsVpPort*>(hPort);
 	auto docInfo = reinterpret_cast<DOC_INFO_1*>(pDocInfo);
-	return pPort->TryStartDoc(std::wstring(pPrinterName), JobId, docInfo);
+	auto hr = pPort->TryStartDoc(std::wstring(pPrinterName), (int)JobId, docInfo);
+	SetLastError(hr);
+	return SUCCEEDED(hr);
 }
 
 _Success_(return != FALSE)
@@ -184,7 +186,9 @@ BOOL WINAPI LcmWritePort(
 	}
 
 	auto pPort = reinterpret_cast<EsVpPort*>(hPort);
-	return pPort->WritePort(pBuffer, cbBuf, pcbWritten);
+	auto hr = pPort->WritePort(pBuffer, cbBuf, pcbWritten);
+	SetLastError(hr);
+	return SUCCEEDED(hr);
 }
 
 _Success_(return != FALSE)
@@ -204,14 +208,8 @@ BOOL WINAPI LcmReadPort(
 
 BOOL WINAPI LcmEndDocPort(_In_ HANDLE hPort)
 {
-	if (!hPort)
-	{
-		SetLastError(ERROR_INVALID_PARAMETER);
-		return FALSE;
-	}
-
-	auto pPort = reinterpret_cast<EsVpPort*>(hPort);
-	return pPort->EndDoc();
+	UNREFERENCED_PARAMETER(hPort);
+	return TRUE;
 }
 
 BOOL WINAPI LcmClosePort(_In_ HANDLE hPort)
@@ -223,9 +221,8 @@ BOOL WINAPI LcmClosePort(_In_ HANDLE hPort)
 	}
 
 	auto pPort = reinterpret_cast<EsVpPort*>(hPort);
-	auto result = pPort->ClosePort();
 	delete pPort;
-	return result;
+	return TRUE;
 }
 
 BOOL WINAPI LcmSetPortTimeOuts(

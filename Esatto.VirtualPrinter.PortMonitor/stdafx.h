@@ -1,11 +1,18 @@
 #pragma once
 
+//#include <winrt/base.h>
 #include <windows.h>
 #include <winspool.h>
 #include <winsplp.h>
 
 #include <string>
 #include <vector>
+
+#include <comutil.h>
+#pragma comment(lib, "comsuppw.lib")
+#include <wil/com.h>
+#include <wil/result.h>
+#include <wil/resource.h>
 
 #include "DriverConstants.h"
 
@@ -16,8 +23,5 @@
 #include "OleAuto.h"
 #include <sddl.h>
 
-#if DEBUG
-#import "..\Esatto.VirtualPrinter.Common\bin\Debug\Esatto.VirtualPrinter.Common.tlb"
-#else
-#import "..\Esatto.VirtualPrinter.Common\bin\Release\Esatto.VirtualPrinter.Common.tlb"
-#endif
+#include "PrintJob.h"
+
