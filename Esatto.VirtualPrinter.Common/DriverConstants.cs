@@ -8,7 +8,7 @@ public static class DriverConstants
 
     // Changes must be mirrored in DriverConstants.h
     public const string PortDescription = "Esatto Virtual Printer Port v4";
-    public const string PortDisplayName = "Esatto Virtual Printer Port";
+    public const string PortDisplayName = "Esatto Virtual Printer Port v4";
     public const string PortDllName = "EsPortMon4.dll";
     public const string PortName = "ESVP4:";
 }

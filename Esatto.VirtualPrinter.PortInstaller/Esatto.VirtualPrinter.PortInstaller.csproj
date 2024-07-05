@@ -6,6 +6,8 @@
     <LangVersion>latest</LangVersion>
     <!-- for System.Printing -->
     <UseWPF>true</UseWPF>
+    <!-- WPF defaults to x86 even when Platform is x64 -->
+    <PlatformTarget>$(Platform)</PlatformTarget>
   </PropertyGroup>
   <Import Project="..\assets\EsattoCSCommon.targets" />
   

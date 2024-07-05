@@ -18,7 +18,6 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Console.ReadLine();
         if (args.Length != 1)
         {
             PrintUsage();
@@ -31,7 +30,7 @@ class Program
 
     private static void PrintUsage()
     {
-        Console.Error.WriteLine("Usage: PrintToFileTarget.exe [print queue name] [targetfile.xps]");
+        MessageBox.Show("Usage: PrintToFileTarget.exe [print queue name] [targetfile.xps]");
         Environment.Exit(1);
     }
 

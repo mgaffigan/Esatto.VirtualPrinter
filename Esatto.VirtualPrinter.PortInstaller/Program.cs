@@ -22,13 +22,18 @@ internal class Program
             string command = args[0].ToLower();
             if (command == "install")
             {
-                RunInstall(args);
+                RunInstallPort(["installport"]);
+                RunInstallDriver(["installdriver"]);
+            }
+            else if (command == "installport")
+            {
+                RunInstallPort(args);
             }
             else if (command == "installdriver")
             {
                 RunInstallDriver(args);
             }
-            else if (command == "uninstall")
+            else if (command == "uninstallport")
             {
                 RunUninstall(args);
             }
@@ -78,7 +83,7 @@ internal class Program
         }
     }
 
-    private static void RunInstall(string[] args)
+    private static void RunInstallPort(string[] args)
     {
         string dllName, displayName;
         if (args.Length == 1)
@@ -131,7 +136,7 @@ internal class Program
             return;
         }
 
-        string path = Path.Combine(Environment.CurrentDirectory, infName);
+        string path = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), infName);
         if (!File.Exists(path))
         {
             Console.WriteLine($"Driver inf does not exist at '{path}', exiting.");
@@ -163,23 +168,27 @@ internal class Program
 
     private static void WriteUsage()
     {
-        Console.WriteLine("Usage: Esatto.VirtualPrinter.PortInstaller.exe install|uninstall");
-        Console.WriteLine("           Install the Esatto Virtual Printer port");
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe install foo.dll \"display name\"");
-        Console.WriteLine("           Install an arbitrary port monitor");
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe uninstall \"display name\"");
-        Console.WriteLine("           Uninstall an arbitrary port monitor");
-        Console.WriteLine();
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe installdriver");
-        Console.WriteLine("           Install the Esatto Virtual Printer driver");
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe installdriver foo.inf \"driver name\"");
-        Console.WriteLine("           Install an arbitrary printer driver");
-        Console.WriteLine();
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe addprinter \"Printer Name\" [\"c:\\path\\to\\target.exe\"]");
-        Console.WriteLine("           Adds an Esatto Virtual Printer queue");
-        Console.WriteLine();
-        Console.WriteLine("       Esatto.VirtualPrinter.PortInstaller.exe removeprinter \"Printer Name\"");
-        Console.WriteLine("           Removes a print queue");
+        Console.Error.WriteLine(@"Usage: Esatto.VirtualPrinter.PortInstaller.exe command [args]
+
+    install         Install the port and driver
+    installport     Install the port
+    uninstallport   Uninstall the port
+    installdriver   Install the driver
+    addprinter      Add a virtual printer queue
+    removeprinter   Remove a virtual printer queue
+
+Example invocations:
+    install
+    installport
+    installport foo.dll ""display name""
+    uninstallport
+    uninstallport ""display name""
+    installdriver
+    installdriver foo.inf ""driver name""
+    addprinter ""Printer Name""
+    addprinter ""Printer Name"" ""c:\path\to\target.exe""
+    removeprinter ""Printer Name""
+");
         Environment.Exit(-1);
     }
 }

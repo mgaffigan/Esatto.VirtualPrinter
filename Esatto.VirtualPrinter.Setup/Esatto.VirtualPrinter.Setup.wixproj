@@ -1,96 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="WixToolset.Sdk/5.0.0">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>7727d082-19b1-48ad-a381-8eafc712469d</ProjectGuid>
-    <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Esatto.VirtualPrinter.Setup</OutputName>
-    <OutputType>Package</OutputType>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <DefineSolutionProperties>false</DefineSolutionProperties>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <InstallerPlatform>x64</InstallerPlatform>
-    <DefineConstants>Debug</DefineConstants>
-    <SuppressIces>ICE40;ICE61;ICE09</SuppressIces>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <InstallerPlatform>x64</InstallerPlatform>
-    <SuppressIces>ICE40;ICE61;ICE09</SuppressIces>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug</DefineConstants>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <InstallerPlatform>x64</InstallerPlatform>
-    <SuppressValidation>False</SuppressValidation>
-    <SuppressIces>ICE40;ICE61;ICE09</SuppressIces>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <InstallerPlatform>x64</InstallerPlatform>
-    <SuppressIces>ICE40;ICE61;ICE09</SuppressIces>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <!-- Suppress ICE61: This product should remove only older versions of itself. No Maximum version was detected for the current product. (WIX_UPGRADE_DETECTED) -->
+    <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Esatto.VirtualPrinter.Setup.wxs" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="WixDifxAppExtension">
-      <HintPath>$(WixExtDir)\WixDifxAppExtension.dll</HintPath>
-      <Name>WixDifxAppExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixUtilExtension">
-      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
-      <Name>WixUtilExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixNetFxExtension">
-      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
-      <Name>WixNetFxExtension</Name>
-    </WixExtension>
+    <ProjectReference Include="..\Esatto.VirtualPrinter.PortInstaller\Esatto.VirtualPrinter.PortInstaller.csproj" />
+    <ProjectReference Include="..\Esatto.VirtualPrinter.PortMonitor\Esatto.VirtualPrinter.PortMonitor.vcxproj" />
+    <ProjectReference Include="..\Esatto.VirtualPrinter.PrintToFileTarget\Esatto.VirtualPrinter.PrintToFileTarget.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.PortInstaller\Esatto.VirtualPrinter.PortInstaller.csproj">
-      <Name>Esatto.VirtualPrinter.PortInstaller</Name>
-      <Project>{882281db-bba9-4ad8-8db0-c7267be126cc}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.PortMonitor\Esatto.VirtualPrinter.PortMonitor.vcxproj">
-      <Name>Esatto.VirtualPrinter.PortMonitor</Name>
-      <Project>{146abb7f-4cb7-41fe-a0e7-408c1438cc32}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.PrintToFileTarget\Esatto.VirtualPrinter.PrintToFileTarget.csproj">
-      <Name>Esatto.VirtualPrinter.PrintToFileTarget</Name>
-      <Project>{4bbbace4-2c0e-4bdd-96f2-164efe0b8bb6}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WixLibrary Include="difxapp_x64" Condition="'$(Platform)' == 'x64'">
-      <HintPath>C:\Program Files (x86)\WiX Toolset v3.10\bin\difxapp_x64.wixlib</HintPath>
-      <Name>difxapp_x64</Name>
-    </WixLibrary>
-    <WixLibrary Include="difxapp_x64" Condition="'$(Platform)' == 'x86'">
-      <HintPath>C:\Program Files (x86)\WiX Toolset v3.10\bin\difxapp_x86.wixlib</HintPath>
-      <Name>difxapp_x64</Name>
-    </WixLibrary>
-  </ItemGroup>
-  <Import Project="$(WixTargetsPath)" />
 </Project>

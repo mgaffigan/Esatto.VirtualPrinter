@@ -131,14 +131,17 @@ HRESULT EsVpTarget::Invoke(std::wstring jobFileName)
 	wil::unique_handle hToken;
 	RETURN_LAST_ERROR_IF_MSG(!OpenThreadToken(GetCurrentThread(), MAXIMUM_ALLOWED, FALSE, hToken.put()), "Could not open thread token");
 
+	wil::unique_environment_block env;
+	RETURN_LAST_ERROR_IF_MSG(!CreateEnvironmentBlock(&env, hToken.get(), FALSE), "Could not create environment block");
+
 	wil::unique_process_information hProcess;
 	RETURN_LAST_ERROR_IF_MSG(!CreateProcessAsUserW(
 		hToken.get(), this->Exe.c_str(), const_cast<LPWSTR>(args.c_str()),
 		/* _In_opt_ LPSECURITY_ATTRIBUTES lpProcessAttributes */ NULL,
 		/* _In_opt_ LPSECURITY_ATTRIBUTES lpThreadAttributes */ NULL,
 		/* _In_ BOOL bInheritHandles */ FALSE,
-		/* _In_ DWORD dwCreationFlags */ 0,
-		/* _In_opt_ LPVOID lpEnvironment */ NULL,
+		/* _In_ DWORD dwCreationFlags */ CREATE_UNICODE_ENVIRONMENT,
+		/* _In_opt_ LPVOID lpEnvironment */ env.get(),
 		/* _In_opt_ LPCWSTR lpCurrentDirectory */ NULL,
 		/* _In_ LPSTARTUPINFOW lpStartupInfo */ &si,
 		/* _Out_ LPPROCESS_INFORMATION lpProcessInformation */ &hProcess
