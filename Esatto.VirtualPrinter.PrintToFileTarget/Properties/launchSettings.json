@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Esatto.VirtualPrinter.PrintToFileTarget": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Windows\\TEMP\\xpsF654.tmp.esvpjob"
+    }
+  }
+}

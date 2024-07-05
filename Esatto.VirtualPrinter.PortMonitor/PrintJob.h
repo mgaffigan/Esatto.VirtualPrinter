@@ -4,7 +4,7 @@ struct PrintJob
 {
 	std::wstring PrinterName;
 	std::wstring DocumentName;
-	std::wstring SpoolFilePath;
+	std::wstring Datatype;
 
-	HRESULT SaveTo(std::wstring path);
+	HRESULT ToXml(std::wstring& xml);
 };

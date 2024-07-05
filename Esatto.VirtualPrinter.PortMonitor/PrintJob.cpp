@@ -4,7 +4,7 @@
 
 #define _T _variant_t
 
-HRESULT PrintJob::SaveTo(std::wstring path)
+HRESULT PrintJob::ToXml(std::wstring& xml)
 {
 	wil::com_ptr<IXMLDOMDocument> doc = wil::CoCreateInstance<IXMLDOMDocument>(CLSID_DOMDocument60);
 
@@ -16,9 +16,11 @@ HRESULT PrintJob::SaveTo(std::wstring path)
 	// This does not handle embedded nuls, but I don't care.
 	RETURN_IF_FAILED(r->setAttribute(_bstr_t(L"PrinterName"), _T(PrinterName.c_str())));
 	RETURN_IF_FAILED(r->setAttribute(_bstr_t(L"DocumentName"), _T(DocumentName.c_str())));
-	RETURN_IF_FAILED(r->setAttribute(_bstr_t(L"SpoolFilePath"), _T(SpoolFilePath.c_str())));
+	RETURN_IF_FAILED(r->setAttribute(_bstr_t(L"DataType"), _T(Datatype.c_str())));
 
-	RETURN_IF_FAILED(doc->save(_T(path.c_str())));
+	_bstr_t xmlText;
+	RETURN_IF_FAILED(doc->get_xml(xmlText.GetAddress()));
+	xml = std::wstring(xmlText, xmlText.length());
 
 	return S_OK;
 }

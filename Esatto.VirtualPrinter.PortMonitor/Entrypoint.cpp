@@ -208,8 +208,16 @@ BOOL WINAPI LcmReadPort(
 
 BOOL WINAPI LcmEndDocPort(_In_ HANDLE hPort)
 {
-	UNREFERENCED_PARAMETER(hPort);
-	return TRUE;
+	if (!hPort)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
+	}
+
+	auto pPort = reinterpret_cast<EsVpPort*>(hPort);
+	auto hr = pPort->EndDoc();
+	SetLastError(hr);
+	return SUCCEEDED(hr);
 }
 
 BOOL WINAPI LcmClosePort(_In_ HANDLE hPort)

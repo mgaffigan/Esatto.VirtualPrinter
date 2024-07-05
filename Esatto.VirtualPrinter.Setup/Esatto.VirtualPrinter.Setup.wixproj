@@ -57,38 +57,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.Common\Esatto.VirtualPrinter.Common.csproj">
-      <Name>Esatto.VirtualPrinter.Common</Name>
-      <Project>{b15063b4-0d99-496b-81be-92cd2e47ca4d}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.Dispatcher\Esatto.VirtualPrinter.Dispatcher.csproj">
-      <Name>Esatto.VirtualPrinter.Dispatcher</Name>
-      <Project>{fcd8bec5-f988-4a64-9ecb-d6e5f772c052}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.Driver\Esatto.VirtualPrinter.Driver.vcxproj">
-      <Name>Esatto.VirtualPrinter.Driver</Name>
-      <Project>{c01ad69e-50a0-4c86-9eae-918827d70b23}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.InstallerTool\Esatto.VirtualPrinter.InstallerTool.csproj">
-      <Name>Esatto.VirtualPrinter.InstallerTool</Name>
-      <Project>{9a54c0ab-1ad0-404b-b15e-ec2c207d0c94}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\Esatto.VirtualPrinter.PortInstaller\Esatto.VirtualPrinter.PortInstaller.csproj">
       <Name>Esatto.VirtualPrinter.PortInstaller</Name>
       <Project>{882281db-bba9-4ad8-8db0-c7267be126cc}</Project>
@@ -113,20 +81,6 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.Redirector\Esatto.VirtualPrinter.Redirector.csproj">
-      <Name>Esatto.VirtualPrinter.Redirector</Name>
-      <Project>{1247131a-a2d3-4de7-bc5e-1ec130a420a4}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Esatto.VirtualPrinter.Common_dll_heatTransform.xslt" />
-    <Content Include="Esatto.VirtualPrinter.Common_tlb_heatTransform.xslt" />
-    <Content Include="Esatto.VirtualPrinter.Dispatcher_exe_heatTransform.xslt" />
-    <Content Include="Esatto.VirtualPrinter.Redirector_exe_heatTransform.xslt" />
   </ItemGroup>
   <ItemGroup>
     <WixLibrary Include="difxapp_x64" Condition="'$(Platform)' == 'x64'">
@@ -139,61 +93,4 @@
     </WixLibrary>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
-  <Target Name="EsattoCheckEnvironment">
-    <PropertyGroup>
-      <TargetFrameworkSDKToolsDirectory Condition="'$(TargetFrameworkSDKToolsDirectory)' == ''">C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\</TargetFrameworkSDKToolsDirectory>
-      <TlbExp64Path>$(TargetFrameworkSDKToolsDirectory)x64\tlbexp.exe</TlbExp64Path>
-      <GacHeatTransform>..\assets\Heat GAC ComAssembly Transform.xslt</GacHeatTransform>
-    </PropertyGroup>
-    <Error Text="Could not find tlbexp at '$(TlbExp64Path)'" Condition="!Exists('$(TlbExp64Path)')" />
-  </Target>
-  <Target Name="LocateEsattoAssemblies">
-    <ItemGroup>
-      <EsattoComAssembly Include="..\Esatto.VirtualPrinter.Common\bin\$(Configuration)\Esatto.VirtualPrinter.Common.dll">
-        <ExportTlb>true</ExportTlb>
-        <TlbWxsTransform>Esatto.VirtualPrinter.Common_tlb_heatTransform.xslt</TlbWxsTransform>
-        <DllWxsTransform>Esatto.VirtualPrinter.Common_dll_heatTransform.xslt</DllWxsTransform>
-        <Link>Esatto.VirtualPrinter.Common.dll</Link>
-      </EsattoComAssembly>
-      <EsattoComAssembly Include="..\Esatto.VirtualPrinter.Dispatcher\bin\$(Configuration)\Esatto.VirtualPrinter.Dispatcher.exe">
-        <DllWxsTransform>Esatto.VirtualPrinter.Dispatcher_exe_heatTransform.xslt</DllWxsTransform>
-        <Link>Esatto.VirtualPrinter.Dispatcher.exe</Link>
-      </EsattoComAssembly>
-      <EsattoComAssembly Include="..\Esatto.VirtualPrinter.Redirector\bin\$(Configuration)\Esatto.VirtualPrinter.Redirector.exe">
-        <DllWxsTransform>Esatto.VirtualPrinter.Redirector_exe_heatTransform.xslt</DllWxsTransform>
-        <Link>Esatto.VirtualPrinter.Redirector.exe</Link>
-      </EsattoComAssembly>
-    </ItemGroup>
-    <!-- transform to add other paths -->
-    <ItemGroup>
-      <ExportedEsattoTlbs Include="%(EsattoComAssembly.RootDir)%(Directory)%(Filename).tlb" Condition="'%(EsattoComAssembly.ExportTlb)' == 'true'">
-        <TlbExportSource>%(Identity)</TlbExportSource>
-        <WxsTransform>%(EsattoComAssembly.TlbWxsTransform)</WxsTransform>
-      </ExportedEsattoTlbs>
-      <EsattoHeatExecution Include="%(EsattoComAssembly.Identity)">
-        <TargetPath>$(IntermediateOutputPath)%(Filename)_ComReg.wxs</TargetPath>
-        <ComponentGroup>$([System.String]::new('%(Filename)').Replace('.', ''))_ComReg</ComponentGroup>
-        <WxsTransform>%(EsattoComAssembly.DllWxsTransform)</WxsTransform>
-      </EsattoHeatExecution>
-      <EsattoHeatExecution Include="%(ExportedEsattoTlbs.Identity)">
-        <TargetPath>$(IntermediateOutputPath)%(Filename)_TlbReg.wxs</TargetPath>
-        <ComponentGroup>$([System.String]::new('%(Filename)').Replace('.', ''))_TlbReg</ComponentGroup>
-        <WxsTransform>%(ExportedEsattoTlbs.WxsTransform)</WxsTransform>
-      </EsattoHeatExecution>
-      <!-- add generated wxs files -->
-      <Compile Include="@(EsattoHeatExecution -> '%(TargetPath)')" />
-      <FileWrites Include="@(EsattoHeatExecution -> '%(TargetPath)')" />
-      <FileWrites Include="@(ExportedEsattoTlbs)" />
-    </ItemGroup>
-  </Target>
-  <Target Name="ExportEsattoTlbs" DependsOnTargets="EsattoCheckEnvironment;LocateEsattoAssemblies;PrepareForBuild" Inputs="@(ExportedEsattoTlbs -> '%(TlbExportSource)')" Outputs="@(ExportedEsattoTlbs -> '%(Identity)')">
-    <Exec Command="&quot;$(TlbExp64Path)&quot; &quot;%(ExportedEsattoTlbs.TlbExportSource)&quot; &quot;/out:%(Identity)&quot;" />
-  </Target>
-  <Target Name="HarvestEsattoAssemblies" DependsOnTargets="LocateEsattoAssemblies;ExportEsattoTlbs" Inputs="@(EsattoHeatExecution -> '%(Identity)');@(EsattoHeatExecution -> '%(WxsTransform)')" Outputs="@(EsattoHeatExecution -> '%(TargetPath)')">
-    <HeatFile File="%(EsattoHeatExecution.Identity)" OutputFile="%(TargetPath)" ToolPath="$(WixToolPath)" ComponentGroupName="%(ComponentGroup)" PreprocessorVariable="var.%(Filename).TargetDir" Transforms="%(WxsTransform)" AutogenerateGuids="true" SuppressRootDirectory="true" DirectoryRefId="INSTALLFOLDER" NoLogo="true" RunAsSeparateProcess="true" />
-  </Target>
-  <PropertyGroup>
-    <!-- the Build target calls Compile which depends on Harvest, which calls this-->
-    <HarvestDependsOn>$(HarvestDependsOn);HarvestEsattoAssemblies</HarvestDependsOn>
-  </PropertyGroup>
 </Project>

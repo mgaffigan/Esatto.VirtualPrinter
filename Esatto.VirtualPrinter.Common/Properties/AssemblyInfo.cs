@@ -1,9 +1,5 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-[assembly: AssemblyTitle("Esatto.VirtualPrinter.Common")]
-[assembly: AssemblyDescription("")]
 
 [assembly: ComVisible(false)]
 [assembly: Guid("b15063b4-0d99-496b-81be-92cd2e47ca4d")]

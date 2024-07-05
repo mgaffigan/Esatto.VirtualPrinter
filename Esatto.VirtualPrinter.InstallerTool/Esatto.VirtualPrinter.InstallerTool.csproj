@@ -51,12 +51,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Esatto.VirtualPrinter.Common\Esatto.VirtualPrinter.Common.csproj">
-      <Project>{b15063b4-0d99-496b-81be-92cd2e47ca4d}</Project>
-      <Name>Esatto.VirtualPrinter.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\assets\EsattoCSCommon.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

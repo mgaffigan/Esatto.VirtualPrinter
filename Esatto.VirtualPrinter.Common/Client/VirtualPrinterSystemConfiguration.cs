@@ -11,31 +11,29 @@ namespace Esatto.VirtualPrinter
     public sealed class VirtualPrinterSystemConfiguration : IDisposable
     {
         private const string PrintersKeyName = "Printers";
-        private const string PrintHandlerCodebaseValueName = "HandlerCodebase";
-        private const string PrintHandlerTypeNameValueName = "HandlerTypeName";
         private const string SystemConfigKeyPath = @"SOFTWARE\In Touch Technologies\Esatto\Virtual Printer";
 
         private bool IsDisposed;
-        internal readonly VirtualPrinterConfigurationAccessLevel AccessLevel;
+        internal readonly PrintSystemDesiredAccess AccessLevel;
 
-        internal readonly RegistryKey RegistryRoot;
-        internal readonly RegistryKey PrintersKey;
+        internal readonly RegistryKey? RegistryRoot;
+        internal readonly RegistryKey? PrintersKey;
         internal readonly LocalPrintServer PrintServer;
 
         public VirtualPrinterConfigurationCollection Printers { get; }
 
-        public VirtualPrinterSystemConfiguration(VirtualPrinterConfigurationAccessLevel accessLevel)
+        public VirtualPrinterSystemConfiguration(PrintSystemDesiredAccess accessLevel)
         {
             this.AccessLevel = accessLevel;
-            this.PrintServer = new LocalPrintServer(accessLevel.ToPrintSystemAccess());
+            this.PrintServer = new LocalPrintServer(accessLevel);
 
             var hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-            if (accessLevel == VirtualPrinterConfigurationAccessLevel.ReadOnly)
+            if (accessLevel == PrintSystemDesiredAccess.EnumerateServer)
             {
                 this.RegistryRoot = hklm64.OpenSubKey(SystemConfigKeyPath, false);
                 this.PrintersKey = this.RegistryRoot?.OpenSubKey("Printers", false);
             }
-            else if (accessLevel == VirtualPrinterConfigurationAccessLevel.ReadWrite)
+            else if (accessLevel != PrintSystemDesiredAccess.EnumerateServer)
             {
                 this.RegistryRoot = hklm64.CreateSubKey(SystemConfigKeyPath, true);
                 this.PrintersKey = this.RegistryRoot.CreateSubKey("Printers", true);
@@ -51,19 +49,12 @@ namespace Esatto.VirtualPrinter
                     continue;
                 }
 
-                try
+                var configKey = this.PrintersKey?.OpenSubKey(queue.Name);
+                if (configKey == null)
                 {
-                    var configKey = this.PrintersKey?.OpenSubKey(queue.Name);
-                    if (configKey == null)
-                    {
-                        throw new InvalidOperationException($"No configuration exists for printer '{queue.Name}'");
-                    }
-                    this.Printers.Add(new VirtualPrinterConfiguration(this, queue, configKey));
+                    throw new InvalidOperationException($"No configuration exists for printer '{queue.Name}'");
                 }
-                catch (Exception ex)
-                {
-                    Log.Warn($"Could not enumerate printer {queue}:\r\n{ex}", 130);
-                }
+                this.Printers.Add(new VirtualPrinterConfiguration(this, queue, configKey));
             }
 
             this.Printers.IsInitialized = true;
