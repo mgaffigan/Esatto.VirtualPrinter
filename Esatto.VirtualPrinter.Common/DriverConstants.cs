@@ -3,8 +3,8 @@
 public static class DriverConstants
 {
     // Changes must be mirrored in esattovp3.inf/gpd
-    public const string DriverModelName = "Esatto Virtual Printer v2";
-    public const string DriverInfName = "esattovp2.inf";
+    public const string DriverModelName = "Esatto Virtual Printer v3";
+    public const string DriverInfName = "esattovp3.inf";
 
     // Changes must be mirrored in DriverConstants.h
     public const string PortDescription = "Esatto Virtual Printer Port v4";

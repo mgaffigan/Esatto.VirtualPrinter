@@ -16,6 +16,14 @@
   </ItemGroup>
   
   <ItemGroup>
+    <None Remove="signer.cer" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="signer.cer" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="Esatto.Win32.Common" Version="3.0.6" />
   </ItemGroup>
   

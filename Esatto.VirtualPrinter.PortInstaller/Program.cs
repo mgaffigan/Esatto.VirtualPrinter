@@ -1,9 +1,11 @@
 ﻿using Esatto.Win32.Printing;
 using Microsoft.Win32;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Printing;
 using System.Printing.IndexedProperties;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Esatto.VirtualPrinter.PortInstaller;
 
@@ -11,17 +13,16 @@ using static DriverConstants;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static int Main(string[] args)
     {
-        if (args.Length < 1 || args.Length > 3)
+        try
         {
-            WriteUsage();
-        }
-        else
-        {
+            if (args.Length < 1) args = ["install"];
+
             string command = args[0].ToLower();
             if (command == "install")
             {
+                RunInstallCert();
                 RunInstallPort(["installport"]);
                 RunInstallDriver(["installdriver"]);
             }
@@ -45,11 +46,33 @@ internal class Program
             {
                 RunRemovePrinter(args);
             }
-            else
-            {
-                WriteUsage();
-            }
+            else throw new UnknownArgumentException();
+
+            return 0;
         }
+        catch (UnknownArgumentException)
+        {
+            WriteUsage();
+            return -1;
+        }
+    }
+
+    private static void RunInstallCert()
+    {
+        var cert = new X509Certificate2(GetResourceAsByteArary("signer.cer"));
+        using var store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
+        store.Open(OpenFlags.ReadWrite);
+        store.Add(cert);
+    }
+
+    private static byte[] GetResourceAsByteArary(string resName)
+    {
+        var asm = typeof(Program).Assembly;
+        using var resource = asm.GetManifestResourceStream($"{asm.GetName().Name}.{resName}")
+                        ?? throw new FileNotFoundException($"Could not find resource {resName}");
+        var result = new byte[resource.Length];
+        if (resource.Read(result, 0, result.Length) != result.Length) throw new EndOfStreamException();
+        return result;
     }
 
     private static void RunAddPrinter(string[] args)
@@ -96,20 +119,22 @@ internal class Program
             dllName = args[1];
             displayName = args[2];
         }
-        else
-        {
-            WriteUsage();
-            return;
-        }
+        else throw new UnknownArgumentException();
 
         string path = Path.Combine(Environment.SystemDirectory, dllName);
         if (!File.Exists(path))
         {
-            Console.WriteLine($"Port dll does not exist at '{path}', exiting.");
-            return;
+            throw new FileNotFoundException($"Port dll does not exist at '{path}', exiting.", path);
         }
 
-        PortMonitors.AddPortMonitor(displayName, dllName, null, null);
+        try
+        {
+            PortMonitors.AddPortMonitor(displayName, dllName, null, null);
+        }
+        catch (Win32Exception ex) when (ex.NativeErrorCode == 3006 /* ERROR_PRINT_MONITOR_ALREADY_INSTALLED */)
+        {
+            Console.WriteLine("Port already installed, skipping.");
+        }
     }
 
     private static void RunInstallDriver(string[] args)
@@ -130,20 +155,15 @@ internal class Program
             infName = args[1];
             driverName = args[2];
         }
-        else
-        {
-            WriteUsage();
-            return;
-        }
+        else throw new UnknownArgumentException();
 
         string path = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), infName);
         if (!File.Exists(path))
         {
-            Console.WriteLine($"Driver inf does not exist at '{path}', exiting.");
-            return;
+            throw new FileNotFoundException($"Driver inf does not exist at '{path}', exiting.", path);
         }
 
-        PrinterDriver.InstallInf(infName, driverName);
+        PrinterDriver.InstallInf(path, driverName);
     }
 
     private static void RunUninstall(string[] args)
@@ -157,11 +177,7 @@ internal class Program
         {
             displayName = args[1];
         }
-        else
-        {
-            WriteUsage();
-            return;
-        }
+        else throw new UnknownArgumentException();
 
         PortMonitors.RemovePortMonitor(displayName, null, null);
     }
@@ -191,4 +207,19 @@ Example invocations:
 ");
         Environment.Exit(-1);
     }
+}
+
+#if NETFRAMEWORK
+[Serializable]
+#endif
+public class UnknownArgumentException : ArgumentException
+{
+    public UnknownArgumentException() { }
+    public UnknownArgumentException(string message) : base(message) { }
+    public UnknownArgumentException(string message, Exception inner) : base(message, inner) { }
+#if NETFRAMEWORK
+    protected UnknownArgumentException(
+      System.Runtime.Serialization.SerializationInfo info,
+      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+#endif
 }

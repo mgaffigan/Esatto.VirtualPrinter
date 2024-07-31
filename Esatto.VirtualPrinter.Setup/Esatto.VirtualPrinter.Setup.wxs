@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:difx="http://wixtoolset.org/schemas/v4/wxs/difxapp">
-  <Package Name="Esatto Virtual Printer v4" Manufacturer="In Touch Technologies" Language="1033" Version="4.0.0.0"
+  <Package Name="Esatto Virtual Printer v4" Manufacturer="In Touch Technologies" Language="1033" Version="4.1.0.0"
            UpgradeCode="{CA1708EC-9A00-409B-A1A4-236BBE0D94D8}" InstallerVersion="301">
 
     <MajorUpgrade AllowDowngrades="yes" />
@@ -33,10 +33,10 @@
     </StandardDirectory>
 
     <!-- Printer driver -->
-    <File Source="..\releases\v2\esattovp2.inf" />
-    <File Source="..\releases\v2\esattovp2.cat" />
-    <File Source="..\releases\v2\esattovp2.gpd" />
-    <File Source="..\releases\v2\esattovp2-PipelineConfig.xml" />
+    <File Source="..\releases\v3\esattovp3.inf" />
+    <File Source="..\releases\v3\esattovp3.cat" />
+    <File Source="..\releases\v3\esattovp3.gpd" />
+    <File Source="..\releases\v3\esattovp3-PipelineConfig.xml" />
 
     <!-- Port Monitor -->
     <Component Permanent="yes" Directory="System64Folder">

@@ -5,6 +5,9 @@
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Readme.md" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="WixToolset.Util.wixext" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
