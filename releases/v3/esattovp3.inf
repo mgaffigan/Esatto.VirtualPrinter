@@ -1,0 +1,64 @@
+;
+; Copyright (c) 2016 In Touch Pharmaceuticals
+; Copyright (c) 2024 In Touch Technologies
+;
+; All rights reserved.
+;
+[Version]
+Signature="$Windows NT$"
+Provider=%ManufacturerName%
+ClassGUID={4D36E979-E325-11CE-BFC1-08002BE10318}
+Class=Printer
+DriverVer = 07/31/2024,17.44.17.856
+CatalogFile=esattovp3.cat
+PnpLockDown=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTx86,NTamd64
+
+[Standard.NTx86]
+"Esatto Virtual Printer v3"=EsattoVirtualPrinterModel3,{DF15E6BC-1829-4D74-91DE-902313DF7FCF}
+
+[Standard.NTamd64]
+"Esatto Virtual Printer v3"=EsattoVirtualPrinterModel3,{DF15E6BC-1829-4D74-91DE-902313DF7FCF}
+
+[EsattoVirtualPrinterModel3]
+CopyFiles=EsattoVirtualPrinterModel3Files
+DriverFile=mxdwdrv.dll
+ConfigFile=UniDrvUI.dll
+HelpFile=UniDrv.HLP
+DataFile=esattovp3.GPD
+CoreDriverSections="{D20EA372-DD35-4950-9ED8-A6335AFE79F0},UNIDRV.OEM", "{D20EA372-DD35-4950-9ED8-A6335AFE79F5},XPSDRV.OEM,XPSGPD.OEM"
+DriverCategory=PrintFax.Printer.Service
+
+[EsattoVirtualPrinterModel3.Services]
+AddService=,2
+
+[PrinterPackageInstallation.x86]
+PackageAware=TRUE
+CoreDriverDependencies={D20EA372-DD35-4950-9ED8-A6335AFE79F0}, {D20EA372-DD35-4950-9ED8-A6335AFE79F5}
+
+[PrinterPackageInstallation.amd64]
+PackageAware=TRUE
+CoreDriverDependencies={D20EA372-DD35-4950-9ED8-A6335AFE79F0}, {D20EA372-DD35-4950-9ED8-A6335AFE79F5}
+
+[DestinationDirs]
+DefaultDestDir=66000
+
+[EsattoVirtualPrinterModel3Files]
+esattovp3.gpd
+esattovp3-pipelineconfig.xml
+
+[SourceDisksNames.x86]
+1=%Location%,,
+
+[SourceDisksNames.amd64]
+1=%Location%,,
+
+[SourceDisksFiles]
+esattovp3.gpd                    = 1
+esattovp3-pipelineconfig.xml     = 1
+
+[Strings]
+Location="Esatto Virtual Printer v3 installation media"
+ManufacturerName="In Touch Technologies"
