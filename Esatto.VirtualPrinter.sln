@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{76A040
 		Assets\Esatto Logo (ICO, Green, 256x256).ico = Assets\Esatto Logo (ICO, Green, 256x256).ico
 		Assets\EsattoCSCommon.targets = Assets\EsattoCSCommon.targets
 		Assets\esattoDefault.snk = Assets\esattoDefault.snk
+		License.md = License.md
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
