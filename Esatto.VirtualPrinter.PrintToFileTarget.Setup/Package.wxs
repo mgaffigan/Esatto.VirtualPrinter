@@ -1,0 +1,36 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Esatto Virtual Printer Sample Target" Manufacturer="In Touch Technologies" Language="1033" Version="4.1.0.0" UpgradeCode="cb83f80b-3c02-47ce-abcc-987297dc2551">
+    <MediaTemplate EmbedCab="yes" />
+    
+    <!-- Locate portinstaller, and throw an error if not found -->
+    <Property Id="PORTINSTALLER">
+      <RegistrySearch Id="PORTINSTALLER" Type="raw" Root="HKLM" Key="SOFTWARE\In Touch Technologies\Esatto\Virtual Printer" Name="PortInstaller" />
+    </Property>
+    <Launch Message="This application requires Esatto Virtual Printer to be installed." Condition="Installed or PORTINSTALLER" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="CompanyFolder" Name="Esatto">
+        <Directory Id="INSTALLFOLDER" Name="Virtual Printer Sample Target" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Include the exe separately to specify the ID -->
+    <File Id="targetexe" Source="!(bindpath.Esatto.VirtualPrinter.PrintToFileTarget)\Esatto.VirtualPrinter.PrintToFileTarget.exe" KeyPath="yes" />
+    <Files Include="!(bindpath.Esatto.VirtualPrinter.PrintToFileTarget)\**">
+      <Exclude Files="!(bindpath.Esatto.VirtualPrinter.PrintToFileTarget)\Esatto.VirtualPrinter.PrintToFileTarget.exe" />
+    </Files>
+
+    <!-- On install, call addprinter to register the print queue with spooler, and to configure the target to be the path of targetexe -->
+    <SetProperty Id="InstallPrinter" Value="&quot;[PORTINSTALLER]&quot; addprinter &quot;Esatto Sample Target&quot; &quot;[#targetexe]&quot;" Before="InstallPrinter" Sequence="execute" />
+    <CustomAction Id="InstallPrinter" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" />
+
+    <!-- On uninstall, call removeprinter to remove the print queue -->
+    <SetProperty Id="RemovePrinter" Value="&quot;[PORTINSTALLER]&quot; removeprinter &quot;Esatto Sample Target&quot;" Before="RemovePrinter" Sequence="execute" />
+    <CustomAction Id="RemovePrinter" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" />
+
+    <InstallExecuteSequence>
+      <Custom Action="InstallPrinter" Before="InstallFinalize" Condition="(REINSTALL&lt;&gt;&quot;&quot;) OR (REMOVE=&quot;&quot;)" />
+      <Custom Action="RemovePrinter" After="InstallInitialize" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>
