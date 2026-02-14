@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <!-- WPF defaults to x86 even when Platform is x64 -->
     <PlatformTarget>$(Platform)</PlatformTarget>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <Import Project="..\assets\EsattoCSCommon.targets" />
   

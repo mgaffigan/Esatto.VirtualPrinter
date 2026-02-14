@@ -7,7 +7,12 @@
     <RootNamespace>Esatto.VirtualPrinter</RootNamespace>
     <!-- for System.Printing -->
     <UseWPF>true</UseWPF>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="Readme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <Import Project="..\assets\EsattoCSCommon.targets" />
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
