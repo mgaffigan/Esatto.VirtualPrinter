@@ -1,6 +1,8 @@
 <Project Sdk="WixToolset.Sdk/5.0.0">
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <DriverPayloadDir Condition=" '$(DriverPayloadDir)' == '' ">..\releases\v4\$(Platform)\</DriverPayloadDir>
+    <DefineConstants>$(DefineConstants);DriverPayloadDir=$(DriverPayloadDir)</DefineConstants>
     <!-- Suppress ICE61: This product should remove only older versions of itself. No Maximum version was detected for the current product. (WIX_UPGRADE_DETECTED) -->
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
