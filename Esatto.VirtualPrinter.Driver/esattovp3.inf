@@ -14,12 +14,15 @@ CatalogFile=esattovp3.cat
 PnpLockDown=1
 
 [Manufacturer]
-%ManufacturerName%=Standard,NTx86,NTamd64
+%ManufacturerName%=Standard,NTx86,NTamd64,NTarm64
 
 [Standard.NTx86]
 "Esatto Virtual Printer v3"=EsattoVirtualPrinterModel3,{DF15E6BC-1829-4D74-91DE-902313DF7FCF}
 
 [Standard.NTamd64]
+"Esatto Virtual Printer v3"=EsattoVirtualPrinterModel3,{DF15E6BC-1829-4D74-91DE-902313DF7FCF}
+
+[Standard.NTarm64]
 "Esatto Virtual Printer v3"=EsattoVirtualPrinterModel3,{DF15E6BC-1829-4D74-91DE-902313DF7FCF}
 
 [EsattoVirtualPrinterModel3]
@@ -42,6 +45,10 @@ CoreDriverDependencies={D20EA372-DD35-4950-9ED8-A6335AFE79F0}, {D20EA372-DD35-49
 PackageAware=TRUE
 CoreDriverDependencies={D20EA372-DD35-4950-9ED8-A6335AFE79F0}, {D20EA372-DD35-4950-9ED8-A6335AFE79F5}
 
+[PrinterPackageInstallation.arm64]
+PackageAware=TRUE
+CoreDriverDependencies={D20EA372-DD35-4950-9ED8-A6335AFE79F0}, {D20EA372-DD35-4950-9ED8-A6335AFE79F5}
+
 [DestinationDirs]
 DefaultDestDir=66000
 
@@ -53,6 +60,9 @@ esattovp3-pipelineconfig.xml
 1=%Location%,,
 
 [SourceDisksNames.amd64]
+1=%Location%,,
+
+[SourceDisksNames.arm64]
 1=%Location%,,
 
 [SourceDisksFiles]
