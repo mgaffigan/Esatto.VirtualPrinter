@@ -32,7 +32,6 @@ BOOL WINAPI LcmEnumPorts(
 	// pName is server name for cross server enumeration.
 	UNREFERENCED_PARAMETER(pName);
 
-	// pPorts is null on the spooler's sizing call, which only asks for the required length
 	if (!hMonitor)
 	{
 		SetLastError(ERROR_INVALID_PARAMETER);
@@ -68,7 +67,8 @@ BOOL WINAPI LcmEnumPorts(
 		cbReq += cPort.GetRequiredLength();
 	}
 
-	if (cbReq > cbBuf)
+	// pPorts is null on the spooler's sizing call, which only asks for the required length
+	if (cbReq > cbBuf || !pPorts)
 	{
 		*pcbNeeded = (DWORD)cbReq;
 		*pcReturned = 0;
