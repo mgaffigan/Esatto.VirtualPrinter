@@ -32,7 +32,8 @@ BOOL WINAPI LcmEnumPorts(
 	// pName is server name for cross server enumeration.
 	UNREFERENCED_PARAMETER(pName);
 
-	if (!hMonitor || !pPorts)
+	// pPorts is null on the spooler's sizing call, which only asks for the required length
+	if (!hMonitor)
 	{
 		SetLastError(ERROR_INVALID_PARAMETER);
 		*pcbNeeded = 0;
