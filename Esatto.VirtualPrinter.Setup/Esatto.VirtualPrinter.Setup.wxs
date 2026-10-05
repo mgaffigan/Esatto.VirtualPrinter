@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:difx="http://wixtoolset.org/schemas/v4/wxs/difxapp">
-  <Package Name="Esatto Virtual Printer v4" Manufacturer="In Touch Technologies" Language="1033" Version="4.1.0.0"
+  <Package Name="Esatto Virtual Printer v4" Manufacturer="In Touch Technologies" Language="1033" Version="4.2.0.0"
            UpgradeCode="{CA1708EC-9A00-409B-A1A4-236BBE0D94D8}" InstallerVersion="301">
 
     <MajorUpgrade AllowDowngrades="yes" />
